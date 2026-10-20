@@ -2,6 +2,7 @@
 "%@ %@" = "%@ %@";
 "%@ API est. · not billed" = "%@ API تخمین زده شده · صورتحساب نشده است";
 "%@ cost" = "هزینه %@";
+"%@ is not enabled. Edit the widget to choose a provider." = "%@ فعال نیست. ویجت را ویرایش کنید تا ارائه‌دهنده را انتخاب کنید.";
 "%@ left" = "%@ باقی مانده";
 "%@ tokens" = "توکن های %@";
 "%@ used" = "%@ مصرف‌شده";
@@ -75,6 +76,7 @@
 "Daily usage" = "استفاده روزانه";
 "Deployment" = "استقرار";
 "Edit predictions" = "ویرایش پیش بینی ها";
+"Enable a provider in CodexBar → Settings → Providers." = "یک ارائه‌دهنده را در CodexBar → تنظیمات → ارائه‌دهندگان فعال کنید.";
 "Enable account widgets in CodexBar → Settings → Menu → Widgets. Then edit this widget to choose an account." = "ویجت های حساب را در CodexBar → تنظیمات → منو → ابزارک ها فعال کنید. سپس این ویجت را ویرایش کنید تا یک حساب کاربری انتخاب کنید.";
 "Extra usage" = "استفاده اضافی";
 "Extra usage balance" = "موجودی استفاده اضافی";

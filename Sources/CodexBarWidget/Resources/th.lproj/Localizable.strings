@@ -2,6 +2,7 @@
 "%@ %@" = "%@ %@";
 "%@ API est. · not billed" = "%@ API est. · ไม่มีการเรียกเก็บเงิน";
 "%@ cost" = "ค่าใช้จ่าย %@";
+"%@ is not enabled. Edit the widget to choose a provider." = "%@ ไม่ได้เปิดใช้งาน แก้ไขวิดเจ็ตเพื่อเลือกผู้ให้บริการ";
 "%@ left" = "เหลือ %@";
 "%@ tokens" = "โทเค็น %@";
 "%@ used" = "%@ ใช้แล้ว";
@@ -75,6 +76,7 @@
 "Daily usage" = "การใช้งานรายวัน";
 "Deployment" = "การปรับใช้";
 "Edit predictions" = "แก้ไขคำทำนาย";
+"Enable a provider in CodexBar → Settings → Providers." = "เปิดใช้งานผู้ให้บริการใน CodexBar → การตั้งค่า → ผู้ให้บริการ";
 "Enable account widgets in CodexBar → Settings → Menu → Widgets. Then edit this widget to choose an account." = "เปิดใช้งานวิดเจ็ตบัญชีใน CodexBar → การตั้งค่า → เมนู → วิดเจ็ต จากนั้นแก้ไขวิดเจ็ตนี้เพื่อเลือกบัญชี";
 "Extra usage" = "การใช้งานเพิ่มเติม";
 "Extra usage balance" = "ยอดการใช้งานเพิ่มเติม";

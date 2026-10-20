@@ -2,6 +2,7 @@
 "%@ %@" = "%@ %@";
 "%@ API est. · not billed" = "%@ API tahmini · faturalandırılmadı";
 "%@ cost" = "%@ maliyeti";
+"%@ is not enabled. Edit the widget to choose a provider." = "%@ etkin değil. Bir sağlayıcı seçmek için widget’ı düzenleyin.";
 "%@ left" = "%@ kaldı";
 "%@ tokens" = "%@ token";
 "%@ used" = "%@ kullanıldı";
@@ -75,6 +76,7 @@
 "Daily usage" = "Günlük kullanım";
 "Deployment" = "Dağıtım";
 "Edit predictions" = "Tahminleri düzenle";
+"Enable a provider in CodexBar → Settings → Providers." = "CodexBar → Ayarlar → Sağlayıcılar’da bir sağlayıcıyı etkinleştirin.";
 "Enable account widgets in CodexBar → Settings → Menu → Widgets. Then edit this widget to choose an account." = "CodexBar → Ayarlar → Menü → Widget'lar bölümünde hesap widget'larını etkinleştirin. Daha sonra bir hesap seçmek için bu widget'ı düzenleyin.";
 "Extra usage" = "Ek kullanım";
 "Extra usage balance" = "Ekstra kullanım bakiyesi";

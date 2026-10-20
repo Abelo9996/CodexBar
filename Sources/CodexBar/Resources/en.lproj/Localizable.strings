@@ -1223,6 +1223,7 @@
 "Password" = "Password";
 "%@ authentication is disabled." = "%@ authentication is disabled.";
 "%@ cookies are disabled." = "%@ cookies are disabled.";
+"%@ is not enabled. Edit the widget to choose a provider." = "%@ is not enabled. Edit the widget to choose a provider.";
 "%@ web API access is disabled." = "%@ web API access is disabled.";
 "Disable %@ dashboard cookie usage." = "Disable %@ dashboard cookie usage.";
 "Keychain access is disabled in Advanced, so browser cookie import is unavailable." = "Keychain access is disabled in Advanced, so browser cookie import is unavailable.";
@@ -1804,6 +1805,7 @@
 "Details for %@" = "Details for %@";
 "EST. %@" = "EST. %@";
 "Enable Antigravity provider" = "Enable Antigravity provider";
+"Enable a provider in CodexBar → Settings → Providers." = "Enable a provider in CodexBar → Settings → Providers.";
 "Enable account widgets in CodexBar → Settings → Menu → Widgets. Then edit this widget to choose an account." = "Enable account widgets in CodexBar → Settings → Menu → Widgets. Then edit this widget to choose an account.";
 "Error: %@" = "Error: %@";
 "Examples: alt+cmd+2, shift+right. Refresh (cmd+r), Settings (cmd+,) and Quit (cmd+q) are reserved." = "Examples: alt+cmd+2, shift+right. Refresh (cmd+r), Settings (cmd+,) and Quit (cmd+q) are reserved.";

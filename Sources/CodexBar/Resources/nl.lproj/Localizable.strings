@@ -1222,6 +1222,7 @@
 "Password" = "Wachtwoord";
 "%@ authentication is disabled." = "%@-authenticatie is uitgeschakeld.";
 "%@ cookies are disabled." = "%@ cookies zijn uitgeschakeld.";
+"%@ is not enabled. Edit the widget to choose a provider." = "%@ is niet ingeschakeld. Bewerk de widget om een provider te kiezen.";
 "%@ web API access is disabled." = "%@ web-API-toegang is uitgeschakeld.";
 "Disable %@ dashboard cookie usage." = "Schakel het gebruik van %@ dashboardcookies uit.";
 "Keychain access is disabled in Advanced, so browser cookie import is unavailable." = "De sleutelhangertoegang is uitgeschakeld in Geavanceerd, dus het importeren van browsercookies is niet beschikbaar.";
@@ -1799,6 +1800,7 @@
 "Details for %@" = "Details voor %@";
 "EST. %@" = "Geschatte %@";
 "Enable Antigravity provider" = "Schakel de Antigravity-provider in";
+"Enable a provider in CodexBar → Settings → Providers." = "Schakel een provider in via CodexBar → Instellingen → Providers.";
 "Enable account widgets in CodexBar → Settings → Menu → Widgets. Then edit this widget to choose an account." = "Schakel accountwidgets in CodexBar → Instellingen → Menu → Widgets in. Bewerk vervolgens deze widget om een ​​account te kiezen.";
 "Error: %@" = "Fout: %@";
 "Examples: alt+cmd+2, shift+right. Refresh (cmd+r), Settings (cmd+,) and Quit (cmd+q) are reserved." = "Voorbeelden: alt+cmd+2, shift+right. Vernieuwen (cmd+r), Instellingen (cmd+,) en Afsluiten (cmd+q) zijn gereserveerd.";

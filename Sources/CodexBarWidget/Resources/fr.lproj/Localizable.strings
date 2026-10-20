@@ -2,6 +2,7 @@
 "%@ %@" = "%@ %@";
 "%@ API est. · not billed" = "%@ API est. · non facturé";
 "%@ cost" = "coût %@";
+"%@ is not enabled. Edit the widget to choose a provider." = "%@ n’est pas activé. Modifiez le widget pour choisir un fournisseur.";
 "%@ left" = "%@ restant";
 "%@ tokens" = "Jetons %@";
 "%@ used" = "%@ utilisé";
@@ -75,6 +76,7 @@
 "Daily usage" = "Utilisation quotidienne";
 "Deployment" = "Déploiement";
 "Edit predictions" = "Modifier les prédictions";
+"Enable a provider in CodexBar → Settings → Providers." = "Activez un fournisseur dans CodexBar → Réglages → Fournisseurs.";
 "Enable account widgets in CodexBar → Settings → Menu → Widgets. Then edit this widget to choose an account." = "Activez les widgets de compte dans CodexBar → Paramètres → Menu → Widgets. Modifiez ensuite ce widget pour choisir un compte.";
 "Extra usage" = "Utilisation supplémentaire";
 "Extra usage balance" = "Solde d'utilisation supplémentaire";

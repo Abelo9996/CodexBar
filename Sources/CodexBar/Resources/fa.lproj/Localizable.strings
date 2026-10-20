@@ -1239,6 +1239,7 @@
 "Password" = "رمز عبور";
 "%@ authentication is disabled." = "%@ احراز هویت غیرفعال است.";
 "%@ cookies are disabled." = "%@ کوکی ها غیرفعال هستند.";
+"%@ is not enabled. Edit the widget to choose a provider." = "%@ فعال نیست. ویجت را ویرایش کنید تا ارائه‌دهنده را انتخاب کنید.";
 "%@ web API access is disabled." = "دسترسی %@ وب API غیرفعال است.";
 "Disable %@ dashboard cookie usage." = "استفاده %@ از کوکی داشبورد را غیرفعال کنید.";
 "Keychain access is disabled in Advanced, so browser cookie import is unavailable." = "دسترسی Keychain در حالت پیشرفته غیرفعال است، بنابراین وارد کردن کوکی مرورگر در دسترس نیست.";
@@ -1804,6 +1805,7 @@
 "Details for %@" = "جزئیات %@";
 "EST. %@" = "تخمینی %@";
 "Enable Antigravity provider" = "ارائه دهنده Antigravity را فعال کنید";
+"Enable a provider in CodexBar → Settings → Providers." = "یک ارائه‌دهنده را در CodexBar → تنظیمات → ارائه‌دهندگان فعال کنید.";
 "Enable account widgets in CodexBar → Settings → Menu → Widgets. Then edit this widget to choose an account." = "ویجت های حساب را در CodexBar → تنظیمات → منو → ابزارک ها فعال کنید. سپس این ویجت را ویرایش کنید تا یک حساب کاربری انتخاب کنید.";
 "Error: %@" = "خطا: %@";
 "Examples: alt+cmd+2, shift+right. Refresh (cmd+r), Settings (cmd+,) and Quit (cmd+q) are reserved." = "مثال: alt+cmd+2، shift+right. بازخوانی (cmd+r)، تنظیمات (cmd+،) و خروج (cmd+q) رزرو شده است.";

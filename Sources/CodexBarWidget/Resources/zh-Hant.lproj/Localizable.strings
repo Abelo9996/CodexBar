@@ -2,6 +2,7 @@
 "%@ %@" = "%@ %@";
 "%@ API est. · not billed" = "%@ API 估算 · 非實際帳單";
 "%@ cost" = "%@費用";
+"%@ is not enabled. Edit the widget to choose a provider." = "%@ 未啟用。編輯小工具以選擇供應商。";
 "%@ left" = "剩餘 %@";
 "%@ tokens" = "%@ token";
 "%@ used" = "%@ 已用";
@@ -75,6 +76,7 @@
 "Daily usage" = "每日用量";
 "Deployment" = "部署";
 "Edit predictions" = "編輯預測";
+"Enable a provider in CodexBar → Settings → Providers." = "在 CodexBar → 設定 → 供應商中啟用一個供應商。";
 "Enable account widgets in CodexBar → Settings → Menu → Widgets. Then edit this widget to choose an account." = "在 CodexBar → 設定 → 選單 → 小工具中啟用帳號小工具。然後編輯此小部件以選擇帳戶。";
 "Extra usage" = "額外使用量";
 "Extra usage balance" = "額外用量餘額";

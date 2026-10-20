@@ -1239,6 +1239,7 @@
 "Password" = "รหัสผ่าน";
 "%@ authentication is disabled." = "%@ การตรวจสอบสิทธิ์ถูกปิดใช้งาน";
 "%@ cookies are disabled." = "คุกกี้ %@ ถูกปิดใช้งาน";
+"%@ is not enabled. Edit the widget to choose a provider." = "%@ ไม่ได้เปิดใช้งาน แก้ไขวิดเจ็ตเพื่อเลือกผู้ให้บริการ";
 "%@ web API access is disabled." = "%@ การเข้าถึง API เว็บถูกปิดใช้งาน";
 "Disable %@ dashboard cookie usage." = "ปิดใช้งานการใช้คุกกี้แดชบอร์ด %@";
 "Keychain access is disabled in Advanced, so browser cookie import is unavailable." = "การเข้าถึง Keychain ถูกปิดใช้งานในขั้นสูง ดังนั้นการนําเข้าคุกกี้ของเบราว์เซอร์จึงไม่พร้อมใช้งาน";
@@ -1804,6 +1805,7 @@
 "Details for %@" = "รายละเอียดสำหรับ %@";
 "EST. %@" = "ประมาณการ %@";
 "Enable Antigravity provider" = "เปิดใช้งานผู้ให้บริการ Antigravity";
+"Enable a provider in CodexBar → Settings → Providers." = "เปิดใช้งานผู้ให้บริการใน CodexBar → การตั้งค่า → ผู้ให้บริการ";
 "Enable account widgets in CodexBar → Settings → Menu → Widgets. Then edit this widget to choose an account." = "เปิดใช้งานวิดเจ็ตบัญชีใน CodexBar → การตั้งค่า → เมนู → วิดเจ็ต จากนั้นแก้ไขวิดเจ็ตนี้เพื่อเลือกบัญชี";
 "Error: %@" = "ข้อผิดพลาด: %@";
 "Examples: alt+cmd+2, shift+right. Refresh (cmd+r), Settings (cmd+,) and Quit (cmd+q) are reserved." = "ตัวอย่าง: alt+cmd+2, shift+right รีเฟรช (cmd+r), การตั้งค่า (cmd+,) และออก (cmd+q) สงวนไว้";

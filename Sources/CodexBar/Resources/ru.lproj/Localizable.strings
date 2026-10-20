@@ -1227,6 +1227,7 @@
 "Password" = "Пароль";
 "%@ authentication is disabled." = "Аутентификация %@ отключена.";
 "%@ cookies are disabled." = "Cookie %@ отключены.";
+"%@ is not enabled. Edit the widget to choose a provider." = "%@ не включён. Отредактируйте виджет, чтобы выбрать провайдера.";
 "%@ web API access is disabled." = "Доступ к веб-API %@ отключён.";
 "Disable %@ dashboard cookie usage." = "Отключить использование cookie дашборда %@.";
 "Keychain access is disabled in Advanced, so browser cookie import is unavailable." = "Доступ к Keychain отключён на вкладке «Расширенные», поэтому импорт cookie браузера недоступен.";
@@ -1801,6 +1802,7 @@
 "Details for %@" = "Подробности для %@";
 "EST. %@" = "Расчетное %@";
 "Enable Antigravity provider" = "Включить провайдера Antigravity";
+"Enable a provider in CodexBar → Settings → Providers." = "Включите провайдера в CodexBar → Настройки → Провайдеры.";
 "Enable account widgets in CodexBar → Settings → Menu → Widgets. Then edit this widget to choose an account." = "Включите виджеты аккаунта в CodexBar → Настройки → Меню → Виджеты. Затем отредактируйте этот виджет, чтобы выбрать учетную запись.";
 "Error: %@" = "Ошибка: %@.";
 "Examples: alt+cmd+2, shift+right. Refresh (cmd+r), Settings (cmd+,) and Quit (cmd+q) are reserved." = "Примеры: alt+cmd+2, shift+right. «Обновить» (cmd+r), «Настройки» (cmd+,) и «Выйти» (cmd+q) зарезервированы.";

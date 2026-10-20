@@ -1234,6 +1234,7 @@
 "Password" = "Parola";
 "%@ authentication is disabled." = "%@ kimlik doğrulaması devre dışı.";
 "%@ cookies are disabled." = "%@ çerezleri devre dışı.";
+"%@ is not enabled. Edit the widget to choose a provider." = "%@ etkin değil. Bir sağlayıcı seçmek için widget’ı düzenleyin.";
 "%@ web API access is disabled." = "%@ web API erişimi devre dışı.";
 "Disable %@ dashboard cookie usage." = "%@ panel çerez kullanımını devre dışı bırak.";
 "Keychain access is disabled in Advanced, so browser cookie import is unavailable." = "Anahtar Zinciri erişimi Gelişmiş bölümünde devre dışı bırakıldı, bu nedenle tarayıcı çerezleri içe aktarılamıyor.";
@@ -1803,6 +1804,7 @@
 "Details for %@" = "%@ için ayrıntılar";
 "EST. %@" = "Tahmini %@";
 "Enable Antigravity provider" = "Antigravity sağlayıcısını etkinleştirin";
+"Enable a provider in CodexBar → Settings → Providers." = "CodexBar → Ayarlar → Sağlayıcılar’da bir sağlayıcıyı etkinleştirin.";
 "Enable account widgets in CodexBar → Settings → Menu → Widgets. Then edit this widget to choose an account." = "CodexBar → Ayarlar → Menü → Widget'lar bölümünde hesap widget'larını etkinleştirin. Daha sonra bir hesap seçmek için bu widget'ı düzenleyin.";
 "Error: %@" = "Hata: %@";
 "Examples: alt+cmd+2, shift+right. Refresh (cmd+r), Settings (cmd+,) and Quit (cmd+q) are reserved." = "Örnekler: alt+cmd+2, shift+right. Yenile (cmd+r), Ayarlar (cmd+,) ve Çık (cmd+q) ayrılmıştır.";

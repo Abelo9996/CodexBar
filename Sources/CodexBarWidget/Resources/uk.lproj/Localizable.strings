@@ -2,6 +2,7 @@
 "%@ %@" = "%@ %@";
 "%@ API est. · not billed" = "%@ API Приблизно · рахунок не виставлено";
 "%@ cost" = "Вартість %@";
+"%@ is not enabled. Edit the widget to choose a provider." = "%@ не ввімкнено. Відредагуйте віджет, щоб вибрати постачальника.";
 "%@ left" = "Залишилося %@";
 "%@ tokens" = "%@ токенів";
 "%@ used" = "%@ використано";
@@ -75,6 +76,7 @@
 "Daily usage" = "Щоденне використання";
 "Deployment" = "Розгортання";
 "Edit predictions" = "Редагувати прогнози";
+"Enable a provider in CodexBar → Settings → Providers." = "Увімкніть постачальника в CodexBar → Налаштування → Постачальники.";
 "Enable account widgets in CodexBar → Settings → Menu → Widgets. Then edit this widget to choose an account." = "Увімкніть віджети облікового запису в CodexBar → Налаштування → Меню → Віджети. Потім відредагуйте цей віджет, щоб вибрати обліковий запис.";
 "Extra usage" = "Додаткове використання";
 "Extra usage balance" = "Залишок додаткового використання";

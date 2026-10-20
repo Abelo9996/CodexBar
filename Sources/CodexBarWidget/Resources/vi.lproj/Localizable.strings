@@ -2,6 +2,7 @@
 "%@ %@" = "%@ %@";
 "%@ API est. · not billed" = "Ước tính %@ API · chưa được lập hóa đơn";
 "%@ cost" = "giá %@";
+"%@ is not enabled. Edit the widget to choose a provider." = "%@ chưa được bật. Chỉnh sửa widget để chọn một nhà cung cấp.";
 "%@ left" = "còn lại %@";
 "%@ tokens" = "%@ mã thông báo";
 "%@ used" = "%@ đã dùng";
@@ -75,6 +76,7 @@
 "Daily usage" = "sử dụng hàng ngày";
 "Deployment" = "Triển khai";
 "Edit predictions" = "Chỉnh sửa dự đoán";
+"Enable a provider in CodexBar → Settings → Providers." = "Bật một nhà cung cấp trong CodexBar → Cài đặt → Nhà cung cấp.";
 "Enable account widgets in CodexBar → Settings → Menu → Widgets. Then edit this widget to choose an account." = "Kích hoạt tiện ích tài khoản trong CodexBar → Cài đặt → Menu → Tiện ích. Sau đó chỉnh sửa tiện ích này để chọn tài khoản.";
 "Extra usage" = "Thêm Mức sử dụng";
 "Extra usage balance" = "Số dư sử dụng thêm";

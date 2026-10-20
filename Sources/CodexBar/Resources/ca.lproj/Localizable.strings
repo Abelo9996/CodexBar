@@ -1076,6 +1076,7 @@
 "Password" = "Contrasenya";
 "%@ authentication is disabled." = "L'autenticació de %@ està desactivada.";
 "%@ cookies are disabled." = "Les galetes de %@ estan desactivades.";
+"%@ is not enabled. Edit the widget to choose a provider." = "%@ no està activat. Edita el widget per triar un proveïdor.";
 "%@ web API access is disabled." = "L'accés a l'API web de %@ està desactivat.";
 "Disable %@ dashboard cookie usage." = "Desactiveu l'ús de galetes del tauler de %@.";
 "Keychain access is disabled in Advanced, so browser cookie import is unavailable." = "L'accés al Clauer està desactivat a Avançat, així que la importació de galetes del navegador no està disponible.";
@@ -1804,6 +1805,7 @@
 "Details for %@" = "Detalls de %@";
 "EST. %@" = "%@ estimat";
 "Enable Antigravity provider" = "Activa el proveïdor Antigravity";
+"Enable a provider in CodexBar → Settings → Providers." = "Activa un proveïdor a CodexBar → Configuració → Proveïdors.";
 "Enable account widgets in CodexBar → Settings → Menu → Widgets. Then edit this widget to choose an account." = "Activa els ginys del compte a CodexBar → Configuració → Menú → Ginys. A continuació, editeu aquest widget per triar un compte.";
 "Error: %@" = "Error: %@";
 "Examples: alt+cmd+2, shift+right. Refresh (cmd+r), Settings (cmd+,) and Quit (cmd+q) are reserved." = "Exemples: alt+cmd+2, shift+right. Actualitzar (cmd+r), Configuració (cmd+,) i Surt (cmd+q) estan reservats.";

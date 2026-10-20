@@ -2,6 +2,7 @@
 "%@ %@" = "%@ %@";
 "%@ API est. · not billed" = "%@ API est. · no facturat";
 "%@ cost" = "Cost %@";
+"%@ is not enabled. Edit the widget to choose a provider." = "%@ no està activat. Edita el widget per triar un proveïdor.";
 "%@ left" = "Queden %@";
 "%@ tokens" = "Fitxes %@";
 "%@ used" = "%@ utilitzat";
@@ -75,6 +76,7 @@
 "Daily usage" = "Ús diari";
 "Deployment" = "Desplegament";
 "Edit predictions" = "Edita les prediccions";
+"Enable a provider in CodexBar → Settings → Providers." = "Activa un proveïdor a CodexBar → Configuració → Proveïdors.";
 "Enable account widgets in CodexBar → Settings → Menu → Widgets. Then edit this widget to choose an account." = "Activa els ginys del compte a CodexBar → Configuració → Menú → Ginys. A continuació, editeu aquest widget per triar un compte.";
 "Extra usage" = "Ús addicional";
 "Extra usage balance" = "Saldo d'ús addicional";

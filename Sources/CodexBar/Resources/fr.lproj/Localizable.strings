@@ -1222,6 +1222,7 @@
 "Password" = "Mot de passe";
 "%@ authentication is disabled." = "L'authentification %@ est désactivée.";
 "%@ cookies are disabled." = "Les cookies %@ sont désactivés.";
+"%@ is not enabled. Edit the widget to choose a provider." = "%@ n’est pas activé. Modifiez le widget pour choisir un fournisseur.";
 "%@ web API access is disabled." = "L'accès à l'API Web %@ est désactivé.";
 "Disable %@ dashboard cookie usage." = "Désactivez l'utilisation des cookies du tableau de bord %@.";
 "Keychain access is disabled in Advanced, so browser cookie import is unavailable." = "L'accès au Trousseau est désactivé dans Advanced, donc l'importation des cookies du navigateur n'est pas disponible.";
@@ -1799,6 +1800,7 @@
 "Details for %@" = "Détails pour %@";
 "EST. %@" = "Estimation %@";
 "Enable Antigravity provider" = "Activer le fournisseur Antigravity";
+"Enable a provider in CodexBar → Settings → Providers." = "Activez un fournisseur dans CodexBar → Réglages → Fournisseurs.";
 "Enable account widgets in CodexBar → Settings → Menu → Widgets. Then edit this widget to choose an account." = "Activez les widgets de compte dans CodexBar → Paramètres → Menu → Widgets. Modifiez ensuite ce widget pour choisir un compte.";
 "Error: %@" = "Erreur : %@";
 "Examples: alt+cmd+2, shift+right. Refresh (cmd+r), Settings (cmd+,) and Quit (cmd+q) are reserved." = "Exemples : alt+cmd+2, shift+right. Actualiser (cmd+r), Paramètres (cmd+,) et Quitter (cmd+q) sont réservés.";

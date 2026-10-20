@@ -3,6 +3,7 @@
 ## 0.79.1 — Unreleased
 
 - Linux: preserve autostart preferences on reinstall when desktop entries contain whitespace, comments, or other groups. (#4662) Thanks @Lucenx9!
+- Widgets: explain when the configured provider is disabled instead of promising refreshed usage data (#4669).
 
 ## 0.79.0 — 2026-10-20
 

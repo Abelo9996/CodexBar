@@ -2,6 +2,7 @@
 "%@ %@" = "%@ %@";
 "%@ API est. · not billed" = "Perkiraan %@ API · tidak ditagih";
 "%@ cost" = "Biaya %@";
+"%@ is not enabled. Edit the widget to choose a provider." = "%@ tidak aktif. Edit widget untuk memilih penyedia.";
 "%@ left" = "%@ tersisa";
 "%@ tokens" = "%@ token";
 "%@ used" = "%@ terpakai";
@@ -75,6 +76,7 @@
 "Daily usage" = "Penggunaan sehari-hari";
 "Deployment" = "Penempatan";
 "Edit predictions" = "Sunting prediksi";
+"Enable a provider in CodexBar → Settings → Providers." = "Aktifkan penyedia di CodexBar → Pengaturan → Penyedia.";
 "Enable account widgets in CodexBar → Settings → Menu → Widgets. Then edit this widget to choose an account." = "Aktifkan widget akun di CodexBar → Pengaturan → Menu → Widget. Kemudian edit widget ini untuk memilih akun.";
 "Extra usage" = "Penggunaan ekstra";
 "Extra usage balance" = "Saldo penggunaan ekstra";
