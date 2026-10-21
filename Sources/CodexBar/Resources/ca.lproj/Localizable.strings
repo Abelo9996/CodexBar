@@ -1417,6 +1417,7 @@
 /* Menu bar layout editor */
 "menu_bar_layout_title" = "Disposició";
 "menu_bar_layout_footer" = "Arrossegueu les fitxes per ordenar la barra de menús. Feu clic en una fitxa per afegir-la; seleccioneu una fitxa col·locada i premeu Supr per eliminar-la.";
+"menu_bar_layout_footer_requires_icon_and_percent" = "La disposició només s'aplica a l'estil de la barra de menús «%@». Trieu aquest estil a dalt per editar-la.";
 "menu_bar_layout_group_identity" = "Identitat";
 "menu_bar_layout_group_usage" = "Ús";
 "menu_bar_layout_group_time" = "Temps";

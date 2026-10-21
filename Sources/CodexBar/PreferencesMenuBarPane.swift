@@ -17,6 +17,17 @@ struct MenuBarPane: View {
         style == .iconAndPercent
     }
 
+    static func layoutEditorEnabled(for style: MenuBarIconStyle) -> Bool {
+        style == .iconAndPercent
+    }
+
+    static func layoutFooterText(for style: MenuBarIconStyle) -> String {
+        guard self.layoutEditorEnabled(for: style) else {
+            return L("menu_bar_layout_footer_requires_icon_and_percent", MenuBarIconStyle.iconAndPercent.label)
+        }
+        return L("menu_bar_layout_footer")
+    }
+
     var body: some View {
         let paceColorSubtitle = L(
             "Green pace indicator when behind pace, red when ahead of pace (risk of running out early)")
@@ -74,11 +85,11 @@ struct MenuBarPane: View {
 
             Section {
                 MenuBarLayoutEditor(settings: self.settings, store: self.store)
-                    .disabled(self.settings.menuBarIconStyle != .iconAndPercent)
+                    .disabled(!Self.layoutEditorEnabled(for: self.settings.menuBarIconStyle))
             } header: {
                 Text(L("menu_bar_layout_title"))
             } footer: {
-                SettingsSectionFooter(L("menu_bar_layout_footer"))
+                SettingsSectionFooter(Self.layoutFooterText(for: self.settings.menuBarIconStyle))
             }
 
             Section {

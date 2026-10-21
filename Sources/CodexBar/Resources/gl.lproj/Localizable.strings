@@ -1410,6 +1410,7 @@
 /* Menu bar layout editor */
 "menu_bar_layout_title" = "Disposición";
 "menu_bar_layout_footer" = "Arrastra fichas para ordenar a barra de menús. Preme nunha ficha para engadila; selecciona unha ficha colocada e preme Suprimir para retirala.";
+"menu_bar_layout_footer_requires_icon_and_percent" = "A disposición só se aplica ao estilo da barra de menús «%@». Escolle ese estilo arriba para editarla.";
 "menu_bar_layout_group_identity" = "Identidade";
 "menu_bar_layout_group_usage" = "Uso";
 "menu_bar_layout_group_time" = "Tempo";

@@ -3,6 +3,7 @@
 ## 0.79.1 — Unreleased
 
 - Linux: preserve autostart preferences on reinstall when desktop entries contain whitespace, comments, or other groups. (#4662) Thanks @Lucenx9!
+- Menu Bar settings: explain that the Layout editor requires the “Icon & percent” style instead of showing drag instructions for a disabled editor (#4665).
 
 ## 0.79.0 — 2026-10-20
 

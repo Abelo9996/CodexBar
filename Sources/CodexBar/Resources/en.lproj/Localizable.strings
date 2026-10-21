@@ -1422,6 +1422,7 @@
 /* Menu bar layout editor */
 "menu_bar_layout_title" = "Layout";
 "menu_bar_layout_footer" = "Drag tokens to arrange the menu bar. Click a token to append it; select a placed token and press Delete to remove it.";
+"menu_bar_layout_footer_requires_icon_and_percent" = "Layout applies only to the “%@” menu bar style. Choose that style above to edit it.";
 "menu_bar_layout_group_identity" = "Identity";
 "menu_bar_layout_group_usage" = "Usage";
 "menu_bar_layout_group_time" = "Time";

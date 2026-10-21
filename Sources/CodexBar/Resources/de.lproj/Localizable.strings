@@ -1413,6 +1413,7 @@
 /* Menu bar layout editor */
 "menu_bar_layout_title" = "Layout";
 "menu_bar_layout_footer" = "Ziehe Bausteine, um die Menüleiste anzuordnen. Klicke einen Baustein zum Anhängen an; wähle einen platzierten Baustein und drücke die Löschtaste, um ihn zu entfernen.";
+"menu_bar_layout_footer_requires_icon_and_percent" = "Das Layout gilt nur für den Menüleistenstil „%@“. Wähle diesen Stil oben aus, um es zu bearbeiten.";
 "menu_bar_layout_group_identity" = "Identität";
 "menu_bar_layout_group_usage" = "Verwendung";
 "menu_bar_layout_group_time" = "Zeit";

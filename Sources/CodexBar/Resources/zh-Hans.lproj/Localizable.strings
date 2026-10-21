@@ -1416,6 +1416,7 @@
 /* Menu bar layout editor */
 "menu_bar_layout_title" = "布局";
 "menu_bar_layout_footer" = "拖动项目以排列菜单栏。点按项目可追加；选择已放置的项目并按 Delete 键可将其移除。";
+"menu_bar_layout_footer_requires_icon_and_percent" = "布局仅适用于“%@”菜单栏样式。请在上方选择该样式以进行编辑。";
 "menu_bar_layout_group_identity" = "身份";
 "menu_bar_layout_group_usage" = "用量";
 "menu_bar_layout_group_time" = "时间";

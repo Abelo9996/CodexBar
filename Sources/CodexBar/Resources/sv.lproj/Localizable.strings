@@ -1409,6 +1409,7 @@
 /* Menu bar layout editor */
 "menu_bar_layout_title" = "Layout";
 "menu_bar_layout_footer" = "Dra brickor för att ordna menyraden. Klicka på en bricka för att lägga till den; markera en placerad bricka och tryck Delete för att ta bort den.";
+"menu_bar_layout_footer_requires_icon_and_percent" = "Layouten gäller endast för menyradsstilen ”%@”. Välj den stilen ovan för att redigera den.";
 "menu_bar_layout_group_identity" = "Identitet";
 "menu_bar_layout_group_usage" = "Användning";
 "menu_bar_layout_group_time" = "Tid";
