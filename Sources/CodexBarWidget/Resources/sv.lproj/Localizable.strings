@@ -2,7 +2,7 @@
 "%@ %@" = "%@ %@";
 "%@ API est. · not billed" = "%@ API uppskattning · faktureras inte";
 "%@ cost" = "Kostnad %@";
-"%@ is not enabled. Edit the widget to choose a provider." = "%@ är inte aktiverat. Redigera widgeten för att välja en leverantör.";
+"%@ is unavailable. Edit the widget to choose a provider." = "%@ är inte tillgänglig. Redigera widgeten för att välja en leverantör.";
 "%@ left" = "%@ kvar";
 "%@ tokens" = "%@ token";
 "%@ used" = "%@ använt";
@@ -166,10 +166,7 @@
 "Two quota burn-down charts in one tile." = "Två Kvot nedbränningsdiagram i en bricka.";
 "Unavailable account" = "Konto: Inte tillgänglig";
 "Usage" = "Användning";
-"Usage data appears after a refresh." = "Användningsdata visas efter en uppdatering.";
-"Usage data will appear once the app refreshes." = "Användningsdata visas när appen uppdateras.";
 "Usage history chart with recent totals." = "Användningshistorikdiagram med senaste summor.";
-"Usage history will appear after a refresh." = "Användningshistorik kommer att visas efter en uppdatering.";
 "Usage limit" = "Användningsgräns";
 "Usage limits and reset countdowns for one saved account." = "Användningsgränser och återställ nedräkningar för ett sparat konto.";
 "Usage widget with a provider switcher." = "Användningswidget med en leverantörsväxlare.";

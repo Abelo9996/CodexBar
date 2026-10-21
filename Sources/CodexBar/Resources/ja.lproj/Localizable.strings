@@ -1219,7 +1219,7 @@
 "Password" = "パスワード";
 "%@ authentication is disabled." = "%@ の認証は無効になっています。";
 "%@ cookies are disabled." = "%@ の Cookie は無効になっています。";
-"%@ is not enabled. Edit the widget to choose a provider." = "%@ は有効になっていません。ウィジェットを編集してプロバイダーを選択してください。";
+"%@ is unavailable. Edit the widget to choose a provider." = "%@ は利用できません。ウィジェットを編集してプロバイダーを選択してください。";
 "%@ web API access is disabled." = "%@ のウェブ API アクセスは無効になっています。";
 "Disable %@ dashboard cookie usage." = "%@ ダッシュボードの Cookie 使用を無効にします。";
 "Keychain access is disabled in Advanced, so browser cookie import is unavailable." = "詳細設定でキーチェーンへのアクセスが無効になっているため、ブラウザ Cookie の読み込みは利用できません。";
@@ -2016,10 +2016,7 @@
 "Top models:" = "トップモデル:";
 "Two quota burn-down charts in one tile." = "1 つのタイルに 2 つの クォータ バーンダウン チャート。";
 "Usage & spend come from your console.groq.com browser session automatically. An API key is optional and only adds Enterprise Prometheus metrics." = "使用量と支出は、console.groq.com ブラウザ セッションから自動的に取得されます。 API キーはオプションで、Enterprise Prometheus 指標 を追加するだけです。";
-"Usage data appears after a refresh." = "使用状況データは更新後に表示されます。";
-"Usage data will appear once the app refreshes." = "アプリが更新されると、使用状況データが表示されます。";
 "Usage history chart with recent totals." = "最近の合計を含む使用履歴グラフ。";
-"Usage history will appear after a refresh." = "更新後に使用履歴が表示されます。";
 "Usage limit" = "利用制限";
 "Usage limits and reset countdowns for one saved account." = "保存された 1 つのアカウントの使用制限とカウントダウンのリセット。";
 "Usage widget with a provider switcher." = "プロバイダースイッチャーを使用した使用状況ウィジェット。";

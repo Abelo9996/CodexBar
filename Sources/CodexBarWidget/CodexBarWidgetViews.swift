@@ -29,8 +29,7 @@ struct CodexBarUsageWidgetView: View {
             } else {
                 WidgetEmptyState(message: WidgetEmptyStateCopy.message(
                     provider: self.entry.provider,
-                    snapshot: self.entry.snapshot,
-                    refresh: W("Usage data will appear once the app refreshes.")))
+                    snapshot: self.entry.snapshot))
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -51,8 +50,7 @@ struct CodexBarHistoryWidgetView: View {
             } else {
                 WidgetEmptyState(message: WidgetEmptyStateCopy.message(
                     provider: self.entry.provider,
-                    snapshot: self.entry.snapshot,
-                    refresh: W("Usage history will appear after a refresh.")))
+                    snapshot: self.entry.snapshot))
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -71,8 +69,7 @@ struct CodexBarCompactWidgetView: View {
             } else {
                 WidgetEmptyState(message: WidgetEmptyStateCopy.message(
                     provider: self.entry.provider,
-                    snapshot: self.entry.snapshot,
-                    refresh: W("Usage data will appear once the app refreshes.")))
+                    snapshot: self.entry.snapshot))
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -220,34 +217,19 @@ enum CompactMetricFormatter {
     }
 }
 
-/// Chooses the empty-state copy for provider-configured widgets. `enabledProviders` records the
-/// providers that were enabled, available (credentials present), and widget-capable when the
-/// snapshot was written; an empty list means the snapshot predates the field or nothing was
-/// recorded, so it can never mark a provider as disabled. Two bounded edge cases: an enabled
-/// provider missing credentials is excluded too (the message still points at the widget edit UI),
-/// and snapshots written before the field existed infer the list from entries, which can mark an
-/// enabled-but-unmeasured provider disabled until the app writes a fresh snapshot.
 enum WidgetEmptyStateCopy {
-    static func isProviderDisabled(provider: UsageProvider, snapshot: WidgetSnapshot) -> Bool {
-        let enabled = snapshot.enabledProviders
-        return !enabled.isEmpty && !enabled.contains(provider.instanceID)
-    }
-
-    /// Configurable widgets can be re-pointed through Edit Widget, so the empty state names the
-    /// provider and tells the user what to change, matching the account widget's guidance.
-    static func message(provider: UsageProvider, snapshot: WidgetSnapshot, refresh: String) -> String {
-        guard self.isProviderDisabled(provider: provider, snapshot: snapshot) else { return refresh }
-        let name = ProviderDefaults.metadata[provider]?.displayName ?? provider.rawValue.capitalized
-        return W("%@ is not enabled. Edit the widget to choose a provider.", String(describing: name))
-    }
-
-    /// The Switcher is statically configured — no provider parameter exists to edit — so when its
-    /// resolved provider is disabled the recovery is enabling a provider in the app.
-    static func switcherMessage(provider: UsageProvider, snapshot: WidgetSnapshot) -> String {
-        guard self.isProviderDisabled(provider: provider, snapshot: snapshot) else {
-            return W("Usage data appears after a refresh.")
+    static func message(provider: UsageProvider, snapshot: WidgetSnapshot) -> String {
+        guard !snapshot.enabledProviders.isEmpty else {
+            return W("Enable a provider in CodexBar → Settings → Providers.")
         }
-        return W("Enable a provider in CodexBar → Settings → Providers.")
+        guard !snapshot.enabledProviders.contains(provider.instanceID) else { return W("No data") }
+        let name = ProviderDefaults.metadata[provider]?.displayName ?? provider.rawValue.capitalized
+        return W("%@ is unavailable. Edit the widget to choose a provider.", name)
+    }
+
+    static func switcherMessage(provider: UsageProvider, snapshot: WidgetSnapshot) -> String {
+        snapshot.enabledProviders.contains(provider.instanceID)
+            ? W("No data") : W("Enable a provider in CodexBar → Settings → Providers.")
     }
 }
 

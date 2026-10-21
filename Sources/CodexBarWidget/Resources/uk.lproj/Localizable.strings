@@ -2,7 +2,7 @@
 "%@ %@" = "%@ %@";
 "%@ API est. · not billed" = "%@ API Приблизно · рахунок не виставлено";
 "%@ cost" = "Вартість %@";
-"%@ is not enabled. Edit the widget to choose a provider." = "%@ не ввімкнено. Відредагуйте віджет, щоб вибрати постачальника.";
+"%@ is unavailable. Edit the widget to choose a provider." = "%@ недоступний. Відредагуйте віджет, щоб вибрати постачальника.";
 "%@ left" = "Залишилося %@";
 "%@ tokens" = "%@ токенів";
 "%@ used" = "%@ використано";
@@ -166,10 +166,7 @@
 "Two quota burn-down charts in one tile." = "Дві діаграми вигорання Квота на одній плитці.";
 "Unavailable account" = "Обліковий запис: Недоступний";
 "Usage" = "Використання";
-"Usage data appears after a refresh." = "Дані про використання з’являються після оновлення.";
-"Usage data will appear once the app refreshes." = "Дані про використання з’являться, коли програма оновиться.";
 "Usage history chart with recent totals." = "Графік історії використання з останніми підсумками.";
-"Usage history will appear after a refresh." = "Історія використання з’явиться після оновлення.";
 "Usage limit" = "Ліміт використання";
 "Usage limits and reset countdowns for one saved account." = "Обмеження використання та скидання зворотного відліку для одного збереженого облікового запису.";
 "Usage widget with a provider switcher." = "Віджет використання з перемикачем провайдерів.";

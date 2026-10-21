@@ -2,7 +2,7 @@
 "%@ %@" = "%@ %@";
 "%@ API est. · not billed" = "%@ API schatting · niet gefactureerd";
 "%@ cost" = "%@ kosten";
-"%@ is not enabled. Edit the widget to choose a provider." = "%@ is niet ingeschakeld. Bewerk de widget om een provider te kiezen.";
+"%@ is unavailable. Edit the widget to choose a provider." = "%@ is niet beschikbaar. Bewerk de widget om een provider te kiezen.";
 "%@ left" = "%@ over";
 "%@ tokens" = "%@-tokens";
 "%@ used" = "%@ gebruikt";
@@ -166,10 +166,7 @@
 "Two quota burn-down charts in one tile." = "Twee Quotum burn-down charts in één tegel.";
 "Unavailable account" = "Account: Niet beschikbaar";
 "Usage" = "Gebruik";
-"Usage data appears after a refresh." = "Gebruiksgegevens verschijnen na een vernieuwing.";
-"Usage data will appear once the app refreshes." = "Gebruiksgegevens verschijnen zodra de app is vernieuwd.";
 "Usage history chart with recent totals." = "Gebruiksgeschiedenisgrafiek met recente totalen.";
-"Usage history will appear after a refresh." = "De gebruiksgeschiedenis verschijnt na een vernieuwing.";
 "Usage limit" = "Gebruikslimiet";
 "Usage limits and reset countdowns for one saved account." = "Gebruikslimieten en reset-countdowns voor één opgeslagen account.";
 "Usage widget with a provider switcher." = "Gebruikswidget met een providerwisselaar.";

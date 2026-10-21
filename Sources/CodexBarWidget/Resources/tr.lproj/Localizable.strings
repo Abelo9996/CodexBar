@@ -2,7 +2,7 @@
 "%@ %@" = "%@ %@";
 "%@ API est. · not billed" = "%@ API tahmini · faturalandırılmadı";
 "%@ cost" = "%@ maliyeti";
-"%@ is not enabled. Edit the widget to choose a provider." = "%@ etkin değil. Bir sağlayıcı seçmek için widget’ı düzenleyin.";
+"%@ is unavailable. Edit the widget to choose a provider." = "%@ kullanılamıyor. Bir sağlayıcı seçmek için widget’ı düzenleyin.";
 "%@ left" = "%@ kaldı";
 "%@ tokens" = "%@ token";
 "%@ used" = "%@ kullanıldı";
@@ -166,10 +166,7 @@
 "Two quota burn-down charts in one tile." = "Tek bir kutucukta iki Kota yanma grafiği.";
 "Unavailable account" = "Hesap: kullanılamıyor";
 "Usage" = "Kullanım";
-"Usage data appears after a refresh." = "Kullanım verileri yenileme sonrasında görünür.";
-"Usage data will appear once the app refreshes." = "Uygulama yenilendiğinde kullanım verileri görünecektir.";
 "Usage history chart with recent totals." = "Son toplamları içeren kullanım geçmişi grafiği.";
-"Usage history will appear after a refresh." = "Kullanım geçmişi yenileme sonrasında görünecektir.";
 "Usage limit" = "Kullanım sınırı";
 "Usage limits and reset countdowns for one saved account." = "Kayıtlı bir hesap için kullanım sınırları ve geri sayımları sıfırlama.";
 "Usage widget with a provider switcher." = "Sağlayıcı değiştiricili kullanım widget'ı.";

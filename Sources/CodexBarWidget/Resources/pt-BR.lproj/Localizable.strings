@@ -2,7 +2,7 @@
 "%@ %@" = "%@ %@";
 "%@ API est. · not billed" = "%@ API estimado · não faturado";
 "%@ cost" = "Custo %@";
-"%@ is not enabled. Edit the widget to choose a provider." = "%@ não está ativado. Edite o widget para escolher um provedor.";
+"%@ is unavailable. Edit the widget to choose a provider." = "%@ não está disponível. Edite o widget para escolher um provedor.";
 "%@ left" = "%@ restante";
 "%@ tokens" = "Tokens %@";
 "%@ used" = "%@ usado";
@@ -166,10 +166,7 @@
 "Two quota burn-down charts in one tile." = "Dois gráficos burn-down Cota em um bloco.";
 "Unavailable account" = "Conta: Indisponível";
 "Usage" = "Uso";
-"Usage data appears after a refresh." = "Os dados de uso aparecem após uma atualização.";
-"Usage data will appear once the app refreshes." = "Os dados de uso aparecerão assim que o aplicativo for atualizado.";
 "Usage history chart with recent totals." = "Gráfico de histórico de uso com totais recentes.";
-"Usage history will appear after a refresh." = "O histórico de uso aparecerá após uma atualização.";
 "Usage limit" = "Limite de uso";
 "Usage limits and reset countdowns for one saved account." = "Limites de uso e redefinição de contagens regressivas para uma conta salva.";
 "Usage widget with a provider switcher." = "Widget de uso com alternador de provedor.";

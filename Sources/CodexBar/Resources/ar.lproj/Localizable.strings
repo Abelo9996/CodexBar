@@ -1239,7 +1239,7 @@
 "Password" = "كلمة المرور";
 "%@ authentication is disabled." = "%@ المصادقة معطلة.";
 "%@ cookies are disabled." = "%@ ملفات تعريف الارتباط معطلة.";
-"%@ is not enabled. Edit the widget to choose a provider." = "%@ غير مُفعَّل. حرِّر الأداة لاختيار مزوِّد.";
+"%@ is unavailable. Edit the widget to choose a provider." = "%@ غير متاح. حرِّر الأداة لاختيار مزوِّد.";
 "%@ web API access is disabled." = "%@ الوصول إلى API الويب معطل.";
 "Disable %@ dashboard cookie usage." = "قم بتعطيل استخدام ملفات تعريف الارتباط %@ لوحة التحكم.";
 "Keychain access is disabled in Advanced, so browser cookie import is unavailable." = "Keychain الوصول معطل في القسم المتقدم، لذا فإن استيراد ملفات تعريف الارتباط من المتصفح غير متاح.";
@@ -2020,10 +2020,7 @@
 "Top models:" = "أعلى النماذج:";
 "Two quota burn-down charts in one tile." = "مخططان محترقان الحصة في لوحة واحدة.";
 "Usage & spend come from your console.groq.com browser session automatically. An API key is optional and only adds Enterprise Prometheus metrics." = "يأتي الاستخدام والإنفاق من جلسة متصفح console.groq.com تلقائيًا. يعد مفتاح API اختياريًا ويضيف فقط Enterprise Prometheus المؤشر.";
-"Usage data appears after a refresh." = "تظهر بيانات الاستخدام بعد التحديث.";
-"Usage data will appear once the app refreshes." = "ستظهر بيانات الاستخدام بمجرد تحديث التطبيق.";
 "Usage history chart with recent totals." = "مخطط تاريخ الاستخدام مع الإجماليات الأخيرة.";
-"Usage history will appear after a refresh." = "سيظهر سجل الاستخدام بعد التحديث.";
 "Usage limit" = "حد الاستخدام";
 "Usage limits and reset countdowns for one saved account." = "حدود الاستخدام وإعادة ضبط العد التنازلي لحساب محفوظ واحد.";
 "Usage widget with a provider switcher." = "أداة لعرض الاستخدام مع مبدّل لموفري الخدمة.";
