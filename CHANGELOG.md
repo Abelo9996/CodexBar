@@ -6,6 +6,7 @@
 - Linux: preserve autostart preferences on reinstall when desktop entries contain whitespace, comments, or other groups. (#4662) Thanks @Lucenx9!
 - Menu cost charts: preserve zero-usage calendar days for every provider, including Claude and Pi, while keeping incomplete and unpriced history unknown (#4664).
 - Widgets: explain when the configured provider is unavailable instead of promising refreshed usage data (#4669, #4671). Thanks @vincent-peng!
+- Menu Bar settings: explain that the Layout editor requires the “Icon & percent” style instead of showing drag instructions for a disabled editor (#4665, #4680). Thanks @LeoLin990405!
 
 ### Fixed
 
