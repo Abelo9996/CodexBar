@@ -13,19 +13,14 @@ struct MenuBarPane: View {
         L("overview_choose_providers", String(limit))
     }
 
-    static func inactiveDisplayContrastAvailable(for style: MenuBarIconStyle) -> Bool {
-        style == .iconAndPercent
-    }
-
     static func layoutEditorEnabled(for style: MenuBarIconStyle) -> Bool {
         style == .iconAndPercent
     }
 
     static func layoutFooterText(for style: MenuBarIconStyle) -> String {
-        guard self.layoutEditorEnabled(for: style) else {
-            return L("menu_bar_layout_footer_requires_icon_and_percent", MenuBarIconStyle.iconAndPercent.label)
-        }
-        return L("menu_bar_layout_footer")
+        self.layoutEditorEnabled(for: style)
+            ? L("menu_bar_layout_footer")
+            : L("menu_bar_layout_footer_requires_icon_and_percent", MenuBarIconStyle.iconAndPercent.label)
     }
 
     var body: some View {
@@ -43,11 +38,7 @@ struct MenuBarPane: View {
                 SettingsMenuPicker(
                     selection: self.$settings.menuBarIconStyle,
                     options: MenuBarSettingsMenuOptions.iconStyles,
-                    label: {
-                        SettingsRowLabel(
-                            L("menu_bar_style_title"),
-                            subtitle: L("menu_bar_style_subtitle"))
-                    },
+                    label: { Text(L("menu_bar_style_title")) },
                     optionLabel: { style in
                         Text(style.label)
                     })
@@ -58,7 +49,7 @@ struct MenuBarPane: View {
                         subtitle: "\(MenuBarIconStyle.iconAndPercent.label): "
                             + L("menu_bar_inactive_display_contrast_subtitle"))
                 }
-                .disabled(!Self.inactiveDisplayContrastAvailable(for: self.settings.menuBarIconStyle))
+                .disabled(!Self.layoutEditorEnabled(for: self.settings.menuBarIconStyle))
 
                 Toggle(isOn: self.$settings.menuBarColorPace) {
                     SettingsRowLabel(
@@ -185,7 +176,7 @@ struct MenuBarPane: View {
 
     private var overviewProviderRow: some View {
         LabeledContent {
-            if self.showsOverviewConfigureButton {
+            if self.settings.mergeIcons, !self.activeProvidersInOrder.isEmpty {
                 Button(L("configure")) {
                     self.isOverviewProviderPopoverPresented = true
                 }
@@ -269,10 +260,6 @@ struct MenuBarPane: View {
         self.settings.resolvedMergedOverviewProviders(
             activeProviders: self.activeProvidersInOrder,
             maxVisibleProviders: Self.maxOverviewProviders)
-    }
-
-    private var showsOverviewConfigureButton: Bool {
-        self.settings.mergeIcons && !self.activeProvidersInOrder.isEmpty
     }
 
     private var overviewProviderSelectionSummary: String {

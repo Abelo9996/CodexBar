@@ -135,9 +135,9 @@ struct PreferencesPaneSmokeTests {
 
     @Test
     func `inactive display contrast is available only for icon and percent`() {
-        #expect(!MenuBarPane.inactiveDisplayContrastAvailable(for: .critters))
-        #expect(!MenuBarPane.inactiveDisplayContrastAvailable(for: .bars))
-        #expect(MenuBarPane.inactiveDisplayContrastAvailable(for: .iconAndPercent))
+        #expect(!MenuBarPane.layoutEditorEnabled(for: .critters))
+        #expect(!MenuBarPane.layoutEditorEnabled(for: .bars))
+        #expect(MenuBarPane.layoutEditorEnabled(for: .iconAndPercent))
     }
 
     @Test

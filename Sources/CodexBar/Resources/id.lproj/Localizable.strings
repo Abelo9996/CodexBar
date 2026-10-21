@@ -629,7 +629,6 @@
 
 /* Display Pane */
 "menu_bar_style_title" = "Gaya menu bar";
-"menu_bar_style_subtitle" = "Cara item menu bar digambar.";
 "menu_bar_inactive_display_contrast_title" = "Tingkatkan visibilitas di layar tidak aktif";
 "menu_bar_inactive_display_contrast_subtitle" = "Gunakan rendering kontras tinggi agar ikon dan metrik tetap terbaca di layar lain.";
 "menu_bar_style_critters" = "Critter";
