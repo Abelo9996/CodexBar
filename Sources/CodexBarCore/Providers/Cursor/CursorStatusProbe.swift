@@ -446,7 +446,13 @@ public struct CursorStatusSnapshot: Sendable {
 
     /// Convert to UsageSnapshot for the common provider interface
     public func toUsageSnapshot(now: Date = Date()) -> UsageSnapshot {
-        let cursorRequests: CursorRequestUsage? = if let used = self.requestsUsed,
+        let sandWindow = self.sandUsage?.extraRateWindow(now: now, resetDescription: Self.formatResetDate)
+        // The X Subscription moves accounts to one weekly pool shared with Grok products, while usage-summary
+        // keeps reporting the old monthly cycle. The pool replaces the monthly Total/Cursor/Third Party bars.
+        let sharedWeeklyPool = self.sandUsage?.isUnified == true ? sandWindow?.window : nil
+
+        let cursorRequests: CursorRequestUsage? = if sharedWeeklyPool == nil,
+                                                     let used = self.requestsUsed,
                                                      let limit = self.requestsLimit,
                                                      limit > 0
         {
@@ -454,6 +460,7 @@ public struct CursorStatusSnapshot: Sendable {
         } else {
             nil
         }
+        let hidesMonthlyBreakdown = cursorRequests != nil || sharedWeeklyPool != nil
 
         // Primary: For usable legacy request quotas, use request usage; otherwise preserve plan percentage.
         let primaryUsedPercent = cursorRequests?.usedPercent ?? self.planPercentUsed
@@ -462,7 +469,7 @@ public struct CursorStatusSnapshot: Sendable {
             start: self.billingCycleStart,
             end: self.billingCycleEnd)
 
-        let primary = RateWindow(
+        let primary = sharedWeeklyPool ?? RateWindow(
             usedPercent: primaryUsedPercent,
             windowMinutes: billingCycleWindowMinutes,
             resetsAt: self.billingCycleEnd,
@@ -472,7 +479,7 @@ public struct CursorStatusSnapshot: Sendable {
         // Secondary: Auto + Composer usage (shown as its own bar below Total).
         // Legacy request-based plans don't have the token-based Auto/API breakdown — those percentages
         // come from the new usage-based pricing and are meaningless next to a request quota, so hide them.
-        let secondary: RateWindow? = cursorRequests != nil ? nil : self.autoPercentUsed.map { pct in
+        let secondary: RateWindow? = hidesMonthlyBreakdown ? nil : self.autoPercentUsed.map { pct in
             RateWindow(
                 usedPercent: pct,
                 windowMinutes: billingCycleWindowMinutes,
@@ -481,7 +488,7 @@ public struct CursorStatusSnapshot: Sendable {
         }
 
         // Tertiary: API (named model) usage — hidden for legacy request-based plans (see above).
-        let tertiary: RateWindow? = cursorRequests != nil ? nil : self.apiPercentUsed.map { pct in
+        let tertiary: RateWindow? = hidesMonthlyBreakdown ? nil : self.apiPercentUsed.map { pct in
             RateWindow(
                 usedPercent: pct,
                 windowMinutes: billingCycleWindowMinutes,
@@ -491,11 +498,11 @@ public struct CursorStatusSnapshot: Sendable {
 
         // Grok Bot is a weekly included allowance on the same Cursor account, not the monthly
         // Total/Cursor/Third Party bars. Hide it on legacy request plans so it cannot sit next
-        // to a request quota that does not share that token-based breakdown.
-        let extraRateWindows: [NamedRateWindow]? = if cursorRequests != nil {
+        // to a request quota that does not share that token-based breakdown, and when it is already primary.
+        let extraRateWindows: [NamedRateWindow]? = if hidesMonthlyBreakdown {
             nil
         } else {
-            self.sandUsage?.extraRateWindow(now: now, resetDescription: Self.formatResetDate).map { [$0] }
+            sandWindow.map { [$0] }
         }
 
         // Prefer authoritative personal billing, then a personal cap or the shared team budget.

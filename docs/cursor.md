@@ -93,6 +93,8 @@ Manual option:
 - `POST https://cursor.com/api/dashboard/get-sand-usage-status`
   - Grok Bot weekly included usage (`usagePercent`, `nextResetTimestampUtc`). Same session cookie;
     requires `Origin: https://cursor.com`. Best-effort: a failure leaves Cursor's monthly bars intact.
+  - `isUnified: true` marks The X Subscription's shared weekly pool. It becomes the primary **Weekly** bar and
+    replaces the stale monthly Total/Cursor/Third Party bars; on-demand spend stays in the cost section.
 
 ## Cookie file paths
 - Safari: `~/Library/Cookies/Cookies.binarycookies`

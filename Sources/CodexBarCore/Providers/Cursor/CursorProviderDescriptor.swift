@@ -82,6 +82,13 @@ public enum CursorProviderDescriptor {
                     "invoice."),
             pace: ProviderPaceCapability(resetWindowPace: .windowDurationPresent),
             presentation: ProviderUsagePresentation(
+                rateWindowLabeler: { metadata, snapshot, _ in
+                    ProviderRateWindowLabels(
+                        primary: Self.primaryLabel(snapshot: snapshot) ?? metadata.sessionLabel,
+                        secondary: metadata.weeklyLabel,
+                        tertiary: metadata.opusLabel ?? "Sonnet",
+                        showsTertiary: metadata.supportsOpus)
+                },
                 extraRateWindowSelector: { snapshot in
                     (snapshot.extraRateWindows ?? []).filter { $0.id == CursorSandUsageStatus.extraWindowID }
                 },
@@ -125,6 +132,19 @@ public enum CursorProviderDescriptor {
         #endif
     }
 
+    /// The X Subscription's shared weekly pool replaces the monthly Total lane as the primary window.
+    public static func primaryLabel(snapshot: UsageSnapshot) -> String? {
+        self.sharedWeeklyPool(snapshot: snapshot) == nil ? nil : "Weekly"
+    }
+
+    /// Monthly Cursor billing cycles never span exactly seven days, so a weekly primary is the shared pool.
+    private static func sharedWeeklyPool(snapshot: UsageSnapshot) -> RateWindow? {
+        guard let primary = snapshot.primary, primary.windowMinutes == 10080, snapshot.secondary == nil else {
+            return nil
+        }
+        return primary
+    }
+
     /// Grok Bot is a named extra 7-day allowance. Cursor's monthly Auto bar is the secondary lane
     /// (`weeklyLabel` "Cursor"), so it is the semantic weekly window. The default duration matcher
     /// would pick Grok Bot instead and paint that weekly pace onto Cursor Auto after a billing reset.
@@ -132,7 +152,7 @@ public enum CursorProviderDescriptor {
         let weekly = snapshot.secondary.flatMap { window -> RateWindow? in
             guard !window.isSyntheticPlaceholder else { return nil }
             return window
-        }
+        } ?? Self.sharedWeeklyPool(snapshot: snapshot)
         return ProviderSemanticWindows(session: nil, weekly: weekly)
     }
 
