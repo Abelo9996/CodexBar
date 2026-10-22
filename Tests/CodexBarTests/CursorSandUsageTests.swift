@@ -239,7 +239,64 @@ struct CursorSandUsageTests {
 
     @Test(arguments: [true, false])
     func `x subscription shared weekly pool replaces stale monthly lanes`(isUnified: Bool) async throws {
-        // Responses reported in #4545, captured from one Enterprise account on The X Subscription.
+        let usage = try await Self.xSubscriptionUsage(sandStatus: Self.xSubscriptionSandStatus(isUnified: isUnified))
+        let descriptor = CursorProviderDescriptor.descriptor
+        let labels = descriptor.presentation.rateWindowLabels(metadata: descriptor.metadata, snapshot: usage)
+        let weeklyReset = try #require(ISO8601DateParser.parse("2026-10-22T10:27:36.178Z"))
+
+        #expect(usage.providerCost?.used == 4.47)
+        #expect(usage.providerCost?.period == "Monthly")
+        #expect(labels.primary == "Total")
+        if isUnified {
+            // The pool takes the weekly lane, so warnings, tokens and rows treat it as weekly usage.
+            #expect(usage.primary == nil)
+            let weekly = try #require(usage.secondary)
+            #expect(abs(weekly.usedPercent - 10.205850487540628) < 0.000001)
+            #expect(weekly.windowMinutes == 10080)
+            #expect(weekly.resetsAt == weeklyReset)
+            #expect(usage.tertiary == nil)
+            #expect(usage.extraRateWindows == nil)
+            #expect(labels.secondary == "Weekly")
+            #expect(descriptor.presentation.semanticWindows(snapshot: usage).weekly == weekly)
+        } else {
+            #expect(usage.primary?.usedPercent == 100)
+            #expect(usage.secondary?.usedPercent == 62.860238353196095)
+            #expect(usage.tertiary?.usedPercent == 0)
+            #expect(usage.extraRateWindows?.first?.id == CursorSandUsageStatus.extraWindowID)
+            #expect(labels.secondary == "Cursor")
+        }
+    }
+
+    @Test(arguments: [nil, "not-a-date"])
+    func `x subscription pool without a usable weekly reset keeps the monthly lanes`(reset: String?) async throws {
+        let usage = try await Self.xSubscriptionUsage(
+            sandStatus: Self.xSubscriptionSandStatus(isUnified: true, nextReset: reset))
+        let descriptor = CursorProviderDescriptor.descriptor
+        let labels = descriptor.presentation.rateWindowLabels(metadata: descriptor.metadata, snapshot: usage)
+
+        #expect(usage.primary?.usedPercent == 100)
+        #expect(usage.secondary?.usedPercent == 62.860238353196095)
+        #expect(usage.tertiary?.usedPercent == 0)
+        let grokBot = try #require(usage.extraRateWindows?.first)
+        #expect(grokBot.id == CursorSandUsageStatus.extraWindowID)
+        #expect(grokBot.window.windowMinutes == nil)
+        #expect(labels.primary == "Total")
+        #expect(labels.secondary == "Cursor")
+    }
+
+    @Test
+    func `saved Grok Bot tokens read the x subscription pool`() async throws {
+        let unified = try await Self.xSubscriptionUsage(sandStatus: Self.xSubscriptionSandStatus(isUnified: true))
+        let aliased = CursorProviderDescriptor.menuBarExtraRateWindows(snapshot: unified)
+        #expect(aliased.map(\.id) == [CursorSandUsageStatus.extraWindowID])
+        #expect(aliased.first?.window == unified.secondary)
+
+        let legacy = try await Self.xSubscriptionUsage(sandStatus: Self.xSubscriptionSandStatus(isUnified: false))
+        #expect(CursorProviderDescriptor.menuBarExtraRateWindows(snapshot: legacy) == legacy.extraRateWindows)
+    }
+
+    /// Responses reported in #4545, captured from one Enterprise account on The X Subscription.
+    private static func xSubscriptionUsage(sandStatus: String) async throws -> UsageSnapshot {
         let testSession = CursorStatusProbeTestSession { request in
             let requestURL = try #require(request.url)
             switch requestURL.path {
@@ -248,10 +305,7 @@ struct CursorSandUsageTests {
             case "/api/auth/me":
                 return makeCursorStatusProbeResponse(url: requestURL, body: #"{"error":"nope"}"#, statusCode: 500)
             case "/api/dashboard/get-sand-usage-status":
-                return makeCursorStatusProbeResponse(
-                    url: requestURL,
-                    body: Self.xSubscriptionSandStatus(isUnified: isUnified),
-                    statusCode: 200)
+                return makeCursorStatusProbeResponse(url: requestURL, body: sandStatus, statusCode: 200)
             default:
                 throw URLError(.badURL)
             }
@@ -263,31 +317,7 @@ struct CursorSandUsageTests {
             browserDetection: BrowserDetection(cacheTTL: 0),
             urlSession: testSession.urlSession).fetchWithManualCookies("auth=test")
         let now = try #require(ISO8601DateParser.parse("2026-10-16T06:50:00Z"))
-        let usage = snapshot.toUsageSnapshot(now: now)
-        let descriptor = CursorProviderDescriptor.descriptor
-        let labels = descriptor.presentation.rateWindowLabels(metadata: descriptor.metadata, snapshot: usage)
-        let weeklyReset = try #require(ISO8601DateParser.parse("2026-10-22T10:27:36.178Z"))
-
-        #expect(snapshot.sandUsage?.isUnified == isUnified)
-        #expect(usage.providerCost?.used == 4.47)
-        #expect(usage.providerCost?.period == "Monthly")
-        if isUnified {
-            let primary = try #require(usage.primary)
-            #expect(abs(primary.usedPercent - 10.205850487540628) < 0.000001)
-            #expect(primary.windowMinutes == 10080)
-            #expect(primary.resetsAt == weeklyReset)
-            #expect(usage.secondary == nil)
-            #expect(usage.tertiary == nil)
-            #expect(usage.extraRateWindows == nil)
-            #expect(labels.primary == "Weekly")
-            #expect(descriptor.presentation.semanticWindows(snapshot: usage).weekly == primary)
-        } else {
-            #expect(usage.primary?.usedPercent == 100)
-            #expect(usage.secondary?.usedPercent == 62.860238353196095)
-            #expect(usage.tertiary?.usedPercent == 0)
-            #expect(usage.extraRateWindows?.first?.id == CursorSandUsageStatus.extraWindowID)
-            #expect(labels.primary == "Total")
-        }
+        return snapshot.toUsageSnapshot(now: now)
     }
 
     private static let now = Date(timeIntervalSince1970: 1_789_344_000)
@@ -336,11 +366,14 @@ struct CursorSandUsageTests {
     }
     """
 
-    private static func xSubscriptionSandStatus(isUnified: Bool) -> String {
+    private static func xSubscriptionSandStatus(
+        isUnified: Bool,
+        nextReset: String? = "2026-10-22T10:27:36.178Z") -> String
+    {
         """
         {
           "currentPeriodStart": "2026-10-15T10:27:36.178Z",
-          "nextResetTimestampUtc": "2026-10-22T10:27:36.178Z",
+          "nextResetTimestampUtc": \(nextReset.map { "\"\($0)\"" } ?? "null"),
           "usagePercent": 10.205850487540628,
           "hasAvailableUsage": true,
           "hasNonZeroIncludedLimit": true,

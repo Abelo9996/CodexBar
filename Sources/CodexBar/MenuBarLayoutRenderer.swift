@@ -874,8 +874,8 @@ final class MenuBarLayoutRenderer {
     {
         let rateWindow = self.window(window, data: data)
         let prefix: String
-        let taggedPrefix = Self.taggedSemanticLane(window, provider: data.provider)
-            .flatMap { Self.laneShortLabel($0, provider: data.provider) }
+        let taggedPrefix = Self.taggedSemanticLane(window, data: data)
+            .flatMap { Self.laneShortLabel($0, data: data) }
         // Named lanes identify distinct allowances; Spend's currency is not a window label.
         if let taggedPrefix { return taggedPrefix }
         guard showWindowLabels || window == .spend else { return "" }
@@ -898,7 +898,7 @@ final class MenuBarLayoutRenderer {
 
     /// A tagged lane announces its own title, so a monthly lane is never read out as "Weekly".
     private static func windowAccessibilityLabel(_ window: PercentWindow, data: MenuBarLayoutRenderData) -> String {
-        if let lane = self.taggedSemanticLane(window, provider: data.provider) {
+        if let lane = self.taggedSemanticLane(window, data: data) {
             return data.laneLabels.label(for: lane)
         }
         return switch window {
@@ -965,7 +965,7 @@ final class MenuBarLayoutRenderer {
         let accessibility = resolvedValue.isAvailable
             ? L("%@ %@", label, resolvedValue.text)
             : L("%@ unavailable", label)
-        let display = Self.laneShortLabel(lane, provider: data.provider)
+        let display = Self.laneShortLabel(lane, data: data)
             .map { "\($0) \(resolvedValue.text)" } ?? resolvedValue.text
         return self.textToken(display, accessibilityText: accessibility, attributes: attributes)
     }
@@ -1301,9 +1301,12 @@ extension MenuBarLayoutRenderer {
         return (value, L("Tokens per minute, latest %@", graph.latest.map(ProviderThroughputSection.count) ?? "—"))
     }
 
-    /// Provider-declared menu bar tag for a lane; nil keeps the lane's percentage bare.
-    private static func laneShortLabel(_ lane: MenuBarLayoutLane, provider: UsageProvider) -> String? {
-        let labels = ProviderDescriptorRegistry.descriptor(for: provider).menuBarMetrics.laneShortLabels
+    /// Provider-declared menu bar tag for a lane; nil keeps the lane's percentage bare. A snapshot-dependent
+    /// lane label (Cursor's X Subscription "Weekly" pool) means the static tag no longer names that lane.
+    private static func laneShortLabel(_ lane: MenuBarLayoutLane, data: MenuBarLayoutRenderData) -> String? {
+        let staticLabels = MenuBarLayoutLaneLabels(provider: data.provider, snapshot: nil)
+        guard data.laneLabels.label(for: lane) == staticLabels.label(for: lane) else { return nil }
+        let labels = ProviderDescriptorRegistry.descriptor(for: data.provider).menuBarMetrics.laneShortLabels
         return switch lane {
         case .primary: labels[.primary]
         case .secondary: labels[.secondary]
@@ -1313,8 +1316,11 @@ extension MenuBarLayoutRenderer {
 
     /// The tagged lane backing a session/weekly percentage, so a provider with explicit lane tags never falls
     /// back to colliding first-letter prefixes; nil when the window maps to no tagged lane.
-    private static func taggedSemanticLane(_ window: PercentWindow, provider: UsageProvider) -> MenuBarLayoutLane? {
-        let presentation = ProviderDescriptorRegistry.descriptor(for: provider).presentation
+    private static func taggedSemanticLane(
+        _ window: PercentWindow,
+        data: MenuBarLayoutRenderData) -> MenuBarLayoutLane?
+    {
+        let presentation = ProviderDescriptorRegistry.descriptor(for: data.provider).presentation
         let primaryWindow = PercentWindow.forSemanticWindow(presentation.primarySemanticWindow)
         let lane: MenuBarLayoutLane? = if window == primaryWindow {
             .primary
@@ -1323,7 +1329,7 @@ extension MenuBarLayoutRenderer {
         } else {
             nil
         }
-        guard let lane, self.laneShortLabel(lane, provider: provider) != nil else { return nil }
+        guard let lane, self.laneShortLabel(lane, data: data) != nil else { return nil }
         return lane
     }
 }

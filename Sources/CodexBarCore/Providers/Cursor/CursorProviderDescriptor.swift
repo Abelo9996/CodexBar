@@ -84,8 +84,8 @@ public enum CursorProviderDescriptor {
             presentation: ProviderUsagePresentation(
                 rateWindowLabeler: { metadata, snapshot, _ in
                     ProviderRateWindowLabels(
-                        primary: Self.primaryLabel(snapshot: snapshot) ?? metadata.sessionLabel,
-                        secondary: metadata.weeklyLabel,
+                        primary: metadata.sessionLabel,
+                        secondary: Self.sharedWeeklyPool(snapshot: snapshot) == nil ? metadata.weeklyLabel : "Weekly",
                         tertiary: metadata.opusLabel ?? "Sonnet",
                         showsTertiary: metadata.supportsOpus)
                 },
@@ -132,17 +132,23 @@ public enum CursorProviderDescriptor {
         #endif
     }
 
-    /// The X Subscription's shared weekly pool replaces the monthly Total lane as the primary window.
-    public static func primaryLabel(snapshot: UsageSnapshot) -> String? {
-        self.sharedWeeklyPool(snapshot: snapshot) == nil ? nil : "Weekly"
+    /// The X Subscription's shared weekly pool takes the weekly lane. Monthly Cursor billing cycles never span
+    /// exactly seven days, so a 7-day secondary window is that pool.
+    private static func sharedWeeklyPool(snapshot: UsageSnapshot?) -> RateWindow? {
+        guard let secondary = snapshot?.secondary, secondary.windowMinutes == 10080 else { return nil }
+        return secondary
     }
 
-    /// Monthly Cursor billing cycles never span exactly seven days, so a weekly primary is the shared pool.
-    private static func sharedWeeklyPool(snapshot: UsageSnapshot) -> RateWindow? {
-        guard let primary = snapshot.primary, primary.windowMinutes == 10080, snapshot.secondary == nil else {
-            return nil
-        }
-        return primary
+    /// The shared pool absorbs the Grok Bot allowance, so saved Grok Bot menu bar tokens keep reading it.
+    public static func menuBarExtraRateWindows(snapshot: UsageSnapshot?) -> [NamedRateWindow] {
+        let extras = snapshot?.extraRateWindows ?? []
+        guard let pool = self.sharedWeeklyPool(snapshot: snapshot),
+              !extras.contains(where: { $0.id == CursorSandUsageStatus.extraWindowID })
+        else { return extras }
+        return extras + [NamedRateWindow(
+            id: CursorSandUsageStatus.extraWindowID,
+            title: CursorSandUsageStatus.extraWindowTitle,
+            window: pool)]
     }
 
     /// Grok Bot is a named extra 7-day allowance. Cursor's monthly Auto bar is the secondary lane
@@ -152,7 +158,7 @@ public enum CursorProviderDescriptor {
         let weekly = snapshot.secondary.flatMap { window -> RateWindow? in
             guard !window.isSyntheticPlaceholder else { return nil }
             return window
-        } ?? Self.sharedWeeklyPool(snapshot: snapshot)
+        }
         return ProviderSemanticWindows(session: nil, weekly: weekly)
     }
 

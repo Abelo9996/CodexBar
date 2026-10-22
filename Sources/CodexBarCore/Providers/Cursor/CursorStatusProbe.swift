@@ -448,8 +448,12 @@ public struct CursorStatusSnapshot: Sendable {
     public func toUsageSnapshot(now: Date = Date()) -> UsageSnapshot {
         let sandWindow = self.sandUsage?.extraRateWindow(now: now, resetDescription: Self.formatResetDate)
         // The X Subscription moves accounts to one weekly pool shared with Grok products, while usage-summary
-        // keeps reporting the old monthly cycle. The pool replaces the monthly Total/Cursor/Third Party bars.
-        let sharedWeeklyPool = self.sandUsage?.isUnified == true ? sandWindow?.window : nil
+        // keeps reporting the old monthly cycle. The pool replaces the monthly Total/Cursor/Third Party bars and
+        // takes the weekly lane; without a usable weekly reset the old layout stays.
+        let sharedWeeklyPool = sandWindow.flatMap { sand -> RateWindow? in
+            guard self.sandUsage?.isUnified == true, sand.window.windowMinutes != nil else { return nil }
+            return sand.window
+        }
 
         let cursorRequests: CursorRequestUsage? = if sharedWeeklyPool == nil,
                                                      let used = self.requestsUsed,
@@ -469,7 +473,7 @@ public struct CursorStatusSnapshot: Sendable {
             start: self.billingCycleStart,
             end: self.billingCycleEnd)
 
-        let primary = sharedWeeklyPool ?? RateWindow(
+        let primary = RateWindow(
             usedPercent: primaryUsedPercent,
             windowMinutes: billingCycleWindowMinutes,
             resetsAt: self.billingCycleEnd,
@@ -498,7 +502,7 @@ public struct CursorStatusSnapshot: Sendable {
 
         // Grok Bot is a weekly included allowance on the same Cursor account, not the monthly
         // Total/Cursor/Third Party bars. Hide it on legacy request plans so it cannot sit next
-        // to a request quota that does not share that token-based breakdown, and when it is already primary.
+        // to a request quota that does not share that token-based breakdown, and when it is the weekly lane.
         let extraRateWindows: [NamedRateWindow]? = if hidesMonthlyBreakdown {
             nil
         } else {
@@ -555,8 +559,8 @@ public struct CursorStatusSnapshot: Sendable {
             loginMethod: self.membershipType.map { Self.formatMembershipType($0) },
             accountID: self.accountID)
         return UsageSnapshot(
-            primary: primary,
-            secondary: secondary,
+            primary: sharedWeeklyPool == nil ? primary : nil,
+            secondary: sharedWeeklyPool ?? secondary,
             tertiary: tertiary,
             extraRateWindows: extraRateWindows,
             providerCost: providerCost,

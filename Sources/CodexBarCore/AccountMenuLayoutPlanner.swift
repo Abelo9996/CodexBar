@@ -186,18 +186,23 @@ public enum AccountMenuLayoutPlanner {
     {
         guard let snapshot = account.snapshot else { return [] }
         let metadata = ProviderDefaults.metadata[account.provider]
+        // Provider-authored labels follow the snapshot, e.g. Cursor's X Subscription "Weekly" pool.
+        let labels = metadata.map {
+            ProviderDescriptorRegistry.descriptor(for: account.provider).presentation
+                .rateWindowLabels(metadata: $0, snapshot: snapshot)
+        }
         var windows: [WindowDetail] = []
         if let primary = snapshot.primary, !primary.isSyntheticPlaceholder {
             windows.append(WindowDetail(
                 metricID: "primary",
-                label: metadata?.sessionLabel ?? "Session",
+                label: labels?.primary ?? "Session",
                 window: primary,
                 resetPresentation: self.primaryResetPresentation(for: account, window: primary)))
         }
         if let secondary = snapshot.secondary {
             windows.append(WindowDetail(
                 metricID: "secondary",
-                label: metadata?.weeklyLabel ?? "Weekly",
+                label: labels?.secondary ?? "Weekly",
                 window: secondary,
                 resetPresentation: .standard))
         }
