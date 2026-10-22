@@ -916,28 +916,25 @@ final class MenuBarLayoutRenderer {
         data: MenuBarLayoutRenderData,
         showWindowLabels: Bool = true) -> String
     {
-        let rateWindow = self.window(window, data: data)
-        let prefix: String
         let taggedPrefix = Self.taggedSemanticLane(window, data: data)
             .flatMap { Self.laneShortLabel($0, data: data) }
         // Named lanes identify distinct allowances; Spend's currency is not a window label.
         if let taggedPrefix { return taggedPrefix }
         guard showWindowLabels || window == .spend else { return "" }
-        switch window {
+        return switch window {
         case .session:
-            prefix = self.primaryLabel(data: data).flatMap(\.first).map { String($0).uppercased() }
-                ?? Self.sessionPrefix(rateWindow)
+            self.primaryLabel(data: data).flatMap(\.first).map { String($0).uppercased() }
+                ?? Self.sessionPrefix(self.window(window, data: data))
         case .weekly:
-            let secondaryLabel = PercentWindow.weekly.providerLabel(provider: data.provider)
-            prefix = secondaryLabel.flatMap(\.first).map { String($0).uppercased() } ?? "W"
+            PercentWindow.weekly.providerLabel(provider: data.provider)
+                .flatMap(\.first).map { String($0).uppercased() } ?? "W"
         case .scopedWeekly:
-            prefix = data.scopedWeeklyTitle.map { String($0.prefix(1)).uppercased() } ?? "F"
+            data.scopedWeeklyTitle.map { String($0.prefix(1)).uppercased() } ?? "F"
         case .automatic:
-            prefix = ""
+            ""
         case .spend:
-            prefix = data.spendCurrencySymbol
+            data.spendCurrencySymbol
         }
-        return prefix
     }
 
     /// A tagged lane announces its own title, so a monthly lane is never read out as "Weekly".
@@ -1245,9 +1242,13 @@ final class MenuBarLayoutRenderer {
     private static func primaryLabel(data: MenuBarLayoutRenderData) -> String? {
         let descriptor = ProviderDescriptorRegistry.descriptor(for: data.provider)
         if let label = descriptor.presentation.menuBarLayoutPrimaryLabel { return L(label) }
-        guard descriptor.metadata.usesDetailBackedWindow, data.session?.windowMinutes == nil else { return nil }
-        return descriptor.presentation.primarySemanticWindow == .session
-            ? data.laneLabels.primary : data.laneLabels.secondary
+        let lane: MenuBarLayoutLane = descriptor.presentation.primarySemanticWindow == .session ? .primary : .secondary
+        let label = data.laneLabels.label(for: lane)
+        let renamedTaggedLane = !descriptor.menuBarMetrics.laneShortLabels.isEmpty
+            && label != MenuBarLayoutLaneLabels(provider: data.provider, snapshot: nil).label(for: lane)
+        guard (descriptor.metadata.usesDetailBackedWindow && data.session?.windowMinutes == nil) || renamedTaggedLane
+        else { return nil }
+        return label
     }
 
     private static func sessionPrefix(_ window: MenuBarLayoutRenderWindow?) -> String {
@@ -1302,9 +1303,10 @@ extension MenuBarLayoutRenderer {
     /// Provider-declared menu bar tag for a lane; nil keeps the lane's percentage bare. A snapshot-dependent
     /// lane label (Cursor's X Subscription "Weekly" pool) means the static tag no longer names that lane.
     private static func laneShortLabel(_ lane: MenuBarLayoutLane, data: MenuBarLayoutRenderData) -> String? {
+        let labels = ProviderDescriptorRegistry.descriptor(for: data.provider).menuBarMetrics.laneShortLabels
+        guard !labels.isEmpty else { return nil }
         let staticLabels = MenuBarLayoutLaneLabels(provider: data.provider, snapshot: nil)
         guard data.laneLabels.label(for: lane) == staticLabels.label(for: lane) else { return nil }
-        let labels = ProviderDescriptorRegistry.descriptor(for: data.provider).menuBarMetrics.laneShortLabels
         return switch lane {
         case .primary: labels[.primary]
         case .secondary: labels[.secondary]

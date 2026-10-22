@@ -76,7 +76,7 @@ public enum CursorProviderDescriptor {
                 supportsTokenCost: true,
                 noDataMessage: { "No Cursor cost usage found. Sign in to Cursor in your browser or the Cursor app." },
                 menuHintLines: [.estimate],
-                supportsTokenSnapshot: self.supportsTokenSnapshot,
+                supportsTokenSnapshot: self.supportsCostCommand,
                 settingsStatusOrder: 2,
                 estimateDisclaimer: "From Cursor's usage dashboard at vendor token rates; may differ from your " +
                     "invoice."),
@@ -84,8 +84,8 @@ public enum CursorProviderDescriptor {
             presentation: ProviderUsagePresentation(
                 rateWindowLabeler: { metadata, snapshot, _ in
                     ProviderRateWindowLabels(
-                        primary: metadata.sessionLabel,
-                        secondary: Self.sharedWeeklyPool(snapshot: snapshot) == nil ? metadata.weeklyLabel : "Weekly",
+                        primary: Self.primaryLabel(snapshot: snapshot) ?? metadata.sessionLabel,
+                        secondary: Self.primaryLabel(snapshot: snapshot) ?? metadata.weeklyLabel,
                         tertiary: metadata.opusLabel ?? "Sonnet",
                         showsTertiary: metadata.supportsOpus)
                 },
@@ -132,23 +132,26 @@ public enum CursorProviderDescriptor {
         #endif
     }
 
-    /// The X Subscription's shared weekly pool takes the weekly lane. Monthly Cursor billing cycles never span
-    /// exactly seven days, so a 7-day secondary window is that pool.
-    private static func sharedWeeklyPool(snapshot: UsageSnapshot?) -> RateWindow? {
-        guard let secondary = snapshot?.secondary, secondary.windowMinutes == 10080 else { return nil }
-        return secondary
+    /// The X Subscription's shared weekly pool replaces the monthly Total lane as the primary window.
+    public static func primaryLabel(snapshot: UsageSnapshot) -> String? {
+        self.sharedWeeklyPool(snapshot: snapshot) == nil ? nil : "Weekly"
     }
 
-    /// The shared pool absorbs the Grok Bot allowance, so saved Grok Bot menu bar tokens keep reading it.
-    public static func menuBarExtraRateWindows(snapshot: UsageSnapshot?) -> [NamedRateWindow] {
-        let extras = snapshot?.extraRateWindows ?? []
-        guard let pool = self.sharedWeeklyPool(snapshot: snapshot),
-              !extras.contains(where: { $0.id == CursorSandUsageStatus.extraWindowID })
-        else { return extras }
-        return extras + [NamedRateWindow(
-            id: CursorSandUsageStatus.extraWindowID,
-            title: CursorSandUsageStatus.extraWindowTitle,
-            window: pool)]
+    /// Monthly Cursor billing cycles never span exactly seven days, so a weekly primary is the shared pool.
+    public static func sharedWeeklyPool(snapshot: UsageSnapshot) -> RateWindow? {
+        guard let primary = snapshot.primary, primary.windowMinutes == 10080, snapshot.secondary == nil,
+              snapshot.detailRow(label: "Request quota") == nil
+        else {
+            return nil
+        }
+        return primary
+    }
+
+    /// Persisted Grok Bot percentage tokens still name this pool after it becomes primary.
+    public static func menuBarExtras(snapshot: UsageSnapshot) -> [NamedRateWindow] {
+        guard let window = self.sharedWeeklyPool(snapshot: snapshot) else { return snapshot.extraRateWindows ?? [] }
+        return [NamedRateWindow(
+            id: CursorSandUsageStatus.extraWindowID, title: CursorSandUsageStatus.extraWindowTitle, window: window)]
     }
 
     /// Grok Bot is a named extra 7-day allowance. Cursor's monthly Auto bar is the secondary lane
@@ -158,8 +161,8 @@ public enum CursorProviderDescriptor {
         let weekly = snapshot.secondary.flatMap { window -> RateWindow? in
             guard !window.isSyntheticPlaceholder else { return nil }
             return window
-        }
-        return ProviderSemanticWindows(session: nil, weekly: weekly)
+        } ?? Self.sharedWeeklyPool(snapshot: snapshot)
+        return ProviderSemanticWindows(session: Self.sharedWeeklyPool(snapshot: snapshot), weekly: weekly)
     }
 
     private static func menuBarWindow(
@@ -180,14 +183,6 @@ public enum CursorProviderDescriptor {
         }
         return .automaticCandidates([total].compactMap(\.self) + usableSubquotas)
     }
-
-    private static var supportsTokenSnapshot: Bool {
-        #if os(macOS)
-        true
-        #else
-        false
-        #endif
-    }
 }
 
 struct CursorStatusFetchStrategy: ProviderFetchStrategy {
@@ -195,13 +190,13 @@ struct CursorStatusFetchStrategy: ProviderFetchStrategy {
     let kind: ProviderFetchKind = .web
 
     func isAvailable(_ context: ProviderFetchContext) async -> Bool {
-        guard context.settings?.cursor?.cookieSource != .off else { return false }
-        return true
+        context.settings?.cursor?.cookieSource != .off
     }
 
     func fetch(_ context: ProviderFetchContext) async throws -> ProviderFetchResult {
         let probe = CursorStatusProbe(browserDetection: context.browserDetection)
-        let manual = Self.manualCookieHeader(from: context)
+        let manual = context.settings?.cursor?.cookieSource == .manual
+            ? CookieHeaderNormalizer.normalize(context.settings?.cursor?.manualCookieHeader) : nil
         let logger: ((String) -> Void)? = context.verbose
             ? { message in CodexBarLog.logger(LogCategories.provider(.cursor)).verbose(message) }
             : nil
@@ -216,10 +211,5 @@ struct CursorStatusFetchStrategy: ProviderFetchStrategy {
 
     func shouldFallback(on _: Error, context _: ProviderFetchContext) -> Bool {
         false
-    }
-
-    private static func manualCookieHeader(from context: ProviderFetchContext) -> String? {
-        guard context.settings?.cursor?.cookieSource == .manual else { return nil }
-        return CookieHeaderNormalizer.normalize(context.settings?.cursor?.manualCookieHeader)
     }
 }

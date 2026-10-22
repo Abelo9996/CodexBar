@@ -372,10 +372,8 @@ extension UsageStore {
             primary: MenuBarLayoutRenderWindow(windows.primary),
             secondary: MenuBarLayoutRenderWindow(windows.secondary),
             tertiary: MenuBarLayoutRenderWindow(windows.tertiary),
-            // Provider-specific by design: Cursor's X Subscription pool backs saved Grok Bot tokens.
-            extraRateWindows: (provider == .cursor
-                ? CursorProviderDescriptor.menuBarExtraRateWindows(snapshot: snapshot)
-                : snapshot?.extraRateWindows ?? []).map(MenuBarLayoutRenderExtra.init),
+            extraRateWindows: MenuBarLayoutNamedExtra.windows(provider: provider, snapshot: snapshot)
+                .map(MenuBarLayoutRenderExtra.init),
             session: MenuBarLayoutRenderWindow(windows.session),
             weekly: MenuBarLayoutRenderWindow(windows.weekly),
             scopedWeekly: MenuBarLayoutRenderWindow(scopedNamed?.window),
