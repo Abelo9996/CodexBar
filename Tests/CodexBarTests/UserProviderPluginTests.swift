@@ -1004,6 +1004,51 @@ extension UserProviderPluginTests {
 
     @MainActor
     @Test
+    func `plugin summary redraws a nonleading quota and restores the single display`() async throws {
+        let fixture = try Fixture()
+        defer { fixture.remove() }
+        _ = try fixture.write(name: "summary.js", source: Self.menuPlugin(id: "summary-meter", name: "Summary"))
+        let plugin = try #require(UserProviderPluginRegistry.refresh(
+            loader: fixture.loader(transport: RecordingTransport(responseJSON: "{}"))).first?.plugin)
+        let (controller, store, settings) = Self.makePluginMenuController(
+            suiteName: "UserProviderPluginTests.summaryLifecycle",
+            selectedPluginID: plugin.manifest.id,
+            enabledPluginIDs: [plugin.manifest.id],
+            approvalStore: fixture.approvals)
+        defer { controller.releaseStatusItemsForTesting() }
+        settings.unifiedIconSource = .currentSelection
+        settings.mergedMenuLastSelectedWasOverview = false
+        settings.menuBarShowsBrandIconWithPercent = true
+        settings.usageBarsShowUsed = false
+        let items = try [
+            ProviderMenuBarItem(title: "Claude", iconProvider: .claude, windowID: "claude"),
+            ProviderMenuBarItem(title: "Codex", iconProvider: .codex, windowID: "codex"),
+        ]
+        store.snapshots[plugin.manifest.id] = try pluginSummarySnapshot(claudeUsed: 80, codexUsed: 10, items: items)
+        controller.updateIcons()
+        let button = try #require(controller.statusItem.button)
+        let menu = controller.statusItem.menu
+        let signature = controller.lastObservedStoreIconWorkSignature
+        store.snapshots[plugin.manifest.id] = try pluginSummarySnapshot(claudeUsed: 80, codexUsed: 30, items: items)
+        for _ in 0..<1000 where controller.lastObservedStoreIconWorkSignature == signature {
+            await Task.yield()
+        }
+        #expect(controller.lastObservedStoreIconWorkSignature != signature)
+        #expect(button.accessibilityTitle()?.contains(UsageFormatter.percentString(70)) == true)
+        #expect(controller.statusItem.menu === menu)
+        let grouped = controller.lastObservedStoreIconWorkSignature
+        controller.menuBarLayoutRenderer.removeAll()
+        store.snapshots[plugin.manifest.id] = try pluginSummarySnapshot(claudeUsed: 80, codexUsed: 30, items: [])
+        for _ in 0..<1000 where controller.lastObservedStoreIconWorkSignature == grouped {
+            await Task.yield()
+        }
+        #expect(controller.lastObservedStoreIconWorkSignature != grouped)
+        #expect(button.accessibilityTitle()?.contains("Codex") != true)
+        #expect(controller.statusItem.length == NSStatusItem.variableLength)
+    }
+
+    @MainActor
+    @Test
     func `plugin icon provider redraws the menu bar and retained switcher at unchanged quota`() async throws {
         let fixture = try Fixture()
         defer { fixture.remove() }

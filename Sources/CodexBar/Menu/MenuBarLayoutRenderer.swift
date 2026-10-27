@@ -316,6 +316,7 @@ final class MenuBarLayoutRenderer {
     }
 
     private let cache: MenuBarLayoutTitleCache
+    let pluginSummary = PluginMenuBarSummaryRenderer()
 
     init(cache: MenuBarLayoutTitleCache = MenuBarLayoutTitleCache()) {
         self.cache = cache
@@ -376,6 +377,7 @@ final class MenuBarLayoutRenderer {
 
     func removeAll() {
         self.cache.removeAll()
+        self.pluginSummary.removeAll()
     }
 
     /// Joins two rows independently rendered for different providers (each with
@@ -603,6 +605,16 @@ final class MenuBarLayoutRenderer {
             }
             return tokens
         }.filter { !$0.isEmpty }
+    }
+
+    static func pluginSummaryTitle(
+        _ title: NSAttributedString, accessibilityLabel: String, highContrast: Bool) -> MenuBarLayoutRenderedTitle
+    {
+        MenuBarLayoutRenderedTitle(
+            attributedTitle: title,
+            accessibilityLabel: accessibilityLabel,
+            leadingIcon: nil,
+            statusImage: highContrast ? nil : self.statusImage(title: title, foregroundColor: .labelColor))
     }
 
     private static func statusImage(title: NSAttributedString, foregroundColor: NSColor) -> NSImage? {

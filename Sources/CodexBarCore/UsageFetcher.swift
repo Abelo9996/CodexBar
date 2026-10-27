@@ -179,6 +179,7 @@ public struct UsageSnapshot: Codable, Sendable {
     public let details: [ProviderDetailSection]
     /// Built-in branding requested by a plugin; does not change its identity or quota source.
     public let iconProvider: UsageProvider?
+    public let menuBarItems: [ProviderMenuBarItem]
     public let deepseekDetailedUsageState: DeepSeekDetailedUsageState
     public let deepseekPlatformProfiles: [DeepSeekPlatformProfile]
     /// Live-only ownership proof; decoded usage cannot authorize browser balance retention.
@@ -218,6 +219,7 @@ public struct UsageSnapshot: Codable, Sendable {
         case providerCost
         case details
         case iconProvider
+        case menuBarItems
         case throughput
         case openAIAPIUsage
         case codexResetCredits
@@ -244,6 +246,7 @@ public struct UsageSnapshot: Codable, Sendable {
         costUsage: CostUsageTokenSnapshot? = nil,
         details: [ProviderDetailSection] = [],
         iconProvider: UsageProvider? = nil,
+        menuBarItems: [ProviderMenuBarItem] = [],
         deepseekDetailedUsageState: DeepSeekDetailedUsageState = .notRequested,
         deepseekPlatformProfiles: [DeepSeekPlatformProfile] = [],
         deepseekPlatformBalanceOwner: DeepSeekPlatformBalanceOwner? = nil,
@@ -270,6 +273,7 @@ public struct UsageSnapshot: Codable, Sendable {
         precondition(
             details.count <= ProviderDetailSection.maximumSectionsPerSnapshot,
             "UsageSnapshot details exceeds \(ProviderDetailSection.maximumSectionsPerSnapshot) sections")
+        precondition(menuBarItems.count <= ProviderMenuBarItem.maximumItems, "Too many plugin menu-bar items")
         self.primary = primary
         self.secondary = secondary
         self.tertiary = tertiary
@@ -278,6 +282,7 @@ public struct UsageSnapshot: Codable, Sendable {
         self.costUsage = costUsage
         self.details = details
         self.iconProvider = iconProvider
+        self.menuBarItems = menuBarItems
         self.deepseekDetailedUsageState = deepseekDetailedUsageState
         self.deepseekPlatformProfiles = deepseekPlatformProfiles
         self.deepseekPlatformBalanceOwner = deepseekPlatformBalanceOwner
@@ -383,6 +388,10 @@ public struct UsageSnapshot: Codable, Sendable {
         self.providerCost = try container.decodeIfPresent(ProviderCostSnapshot.self, forKey: .providerCost)
         self.costUsage = nil // Live-only provider history; refresh from the authoritative source.
         self.iconProvider = try container.decodeIfPresent(UsageProvider.self, forKey: .iconProvider)
+        self.menuBarItems = try container.decodeIfPresent([ProviderMenuBarItem].self, forKey: .menuBarItems) ?? []
+        guard self.menuBarItems.count <= ProviderMenuBarItem.maximumItems else {
+            throw ProviderDetailSection.ValidationError("snapshot.menuBarItems exceeds 8 entries")
+        }
         let details = try container.decodeIfPresent([ProviderDetailSection].self, forKey: .details) ?? []
         try ProviderDetailSection.validateSections(details)
         // Provider-specific by design: native Grok and Claude reset-credit rows are live-only inventory.
@@ -433,6 +442,7 @@ public struct UsageSnapshot: Codable, Sendable {
         try container.encodeIfPresent(self.extraRateWindows, forKey: .extraRateWindows)
         try container.encodeIfPresent(self.providerCost, forKey: .providerCost)
         try container.encodeIfPresent(self.iconProvider, forKey: .iconProvider)
+        if !self.menuBarItems.isEmpty { try container.encode(self.menuBarItems, forKey: .menuBarItems) }
         if !self.details.isEmpty {
             try container.encode(self.details, forKey: .details)
         }
@@ -636,6 +646,7 @@ public struct UsageSnapshot: Codable, Sendable {
             costUsage: costUsage.resolving(self.costUsage),
             details: details.resolving(self.details),
             iconProvider: self.iconProvider,
+            menuBarItems: self.menuBarItems,
             deepseekDetailedUsageState: deepseekDetailedUsageState.resolving(self.deepseekDetailedUsageState),
             deepseekPlatformProfiles: deepseekPlatformProfiles.resolving(self.deepseekPlatformProfiles),
             deepseekPlatformBalanceOwner: self.deepseekPlatformBalanceOwner,

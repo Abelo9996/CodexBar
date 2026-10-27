@@ -116,6 +116,13 @@ interface CodexBarDetailSection {
   chart?: CodexBarDetailChart | null;
 }
 
+interface CodexBarMenuBarItem {
+  title: string;
+  iconProvider?: string | null;
+  /** Native extra-window ID. Missing/unmeasured references show unavailable, never another window. */
+  windowID?: string | null;
+}
+
 interface CodexBarUsageSnapshot {
   /** Explicitly declares a successful response with no displayable usage or identity. Other fields are still validated. */
   empty?: boolean;
@@ -130,6 +137,8 @@ interface CodexBarUsageSnapshot {
   identity?: CodexBarIdentitySnapshot | null;
   /** Built-in provider ID for the menu-bar/switcher logo only. Send only when ctx.env.supportsIconProvider === true. */
   iconProvider?: string | null;
+  /** Up to 8 ordered logo/percentage pairs in one status item. Requires ctx.env.supportsMenuBarItems === true. */
+  menuBarItems?: CodexBarMenuBarItem[] | null;
   subscriptionRenewsAt?: Date | string | null;
   subscriptionExpiresAt?: Date | string | null;
   dataConfidence?: "exact" | "estimated" | "percentOnly" | "unknown";
@@ -292,6 +301,7 @@ interface CodexBarPluginContext {
     readonly timeZone: string;
     /** Older hosts omit this flag and reject the iconProvider snapshot field. */
     readonly supportsIconProvider?: boolean;
+    readonly supportsMenuBarItems?: boolean;
   };
   readonly cache: {
     get<T = unknown>(key: string): T | undefined;

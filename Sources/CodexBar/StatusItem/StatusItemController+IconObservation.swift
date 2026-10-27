@@ -54,8 +54,11 @@ extension StatusItemController {
                 snapshot: snapshot, showUsed: self.settings.usageBarsShowUsed)
             let source = UserProviderPluginRegistry.plugin(for: instanceID)?.sourceHash ?? ""
             let icon = showBrandPercent ? snapshot?.iconProvider?.rawValue ?? "" : ""
+            let summary = showBrandPercent ? snapshot.map {
+                PluginMenuBarSummaryRenderer.elements(snapshot: $0, showUsed: self.settings.usageBarsShowUsed).hashValue
+            } : nil
             return "\(instanceID.rawValue)|percent=\(Self.iconSignatureValue(percent))" +
-                "|error=\(self.store.errors[instanceID] != nil)|source=\(source)|icon=\(icon)"
+                "|error=\(self.store.errors[instanceID] != nil)|source=\(source)|icon=\(icon)|summary=\(summary ?? 0)"
         }
         let snapshot = self.menuBarUsageSource(for: provider).snapshot
         let style = self.store.style(for: provider)

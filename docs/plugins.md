@@ -318,6 +318,7 @@ so portable third-party plugins must use the host helpers below instead of ECMA-
   February 28, or February 29 in a leap year). Offsets are limited to ±120,000 months, and invalid dates, time zones,
   fractional offsets, or results outside JavaScript's Date range throw.
 - `ctx.env.timeZone` is the host's current IANA time-zone identifier; zero-offset GMT aliases are normalized to `UTC`.
+- `ctx.env.supportsMenuBarItems === true` means snapshots may include a compact multi-quota menu-bar summary.
 - `ctx.env.supportsIconProvider === true` means snapshots may request built-in provider branding with `iconProvider`.
   Older hosts omit this flag; omit the snapshot field on those hosts to retain the manifest icon without a fetch error.
 - `ctx.format.number(value, options?)`, `usd(value)`, and `monthDay(date)` provide deterministic formatting on both
@@ -424,6 +425,26 @@ return snapshot;
 Returning to `auto` means omitting the field in the next snapshot, which restores the manifest icon even if the
 percentage did not change. The option applies when the menu bar is configured to show the brand icon; it does not
 replace the quota meter in meter-only mode.
+
+For an aggregator, `menuBarItems` can show up to eight ordered logo/percentage pairs in the existing status item:
+
+```js
+if (ctx.env.supportsMenuBarItems === true) {
+  snapshot.menuBarItems = [
+    { title: "Claude", iconProvider: "claude", windowID: "claude-weekly" },
+    { title: "Codex", iconProvider: "codex", windowID: "codex-weekly" },
+  ];
+}
+```
+
+Each `windowID` references an existing native `extraWindows` ID; the script chooses its intended quota explicitly.
+Missing, unmeasured or unknown references show unavailable, never another quota. Genuine 0% remaining stays 0%.
+Titles and references are limited to 120 characters. The summary is presentation metadata, not another usage source.
+It appears in merged **Icon & percent** mode with this plugin selected; clicking the group opens the same plugin menu.
+The app preserves the configured order, used/remaining preference, accessibility labels, template tinting and existing
+status-item placement. Meter-only mode keeps its existing rendering. Empty/omitted items restore the normal single
+indicator. Scripts must omit the entire field on older hosts. Summary rendering caches unchanged frames and uses only
+bundled provider images (or manifest fallback), without new timers, status items or network requests.
 
 Plugin cards show `resetsAt` using the app's countdown or absolute-time preference. When no usable timestamp is
 available, `resetDescription` supplies the reset text through the same formatter as built-in providers. A refresh
