@@ -32,7 +32,8 @@ the most-used reported seven-day window, otherwise the first available primary, 
 Choose **Primary**, **Secondary**, **Tertiary**, or a named extra window to use that quota for both the Icon & percent
 number and the provider-switcher gauge. Reported window titles replace the generic labels; named extras appear after
 the plugin reports them. For example, choosing a monthly window at 76.9% used displays **77%** even just after a weekly
-reset. Both surfaces honor the existing used/remaining display preference.
+reset. Both surfaces honor the existing used/remaining display preference. The menu-bar percentage refreshes when
+its selected window changes, even while Auto stays unchanged.
 
 The choice is saved per plugin using the existing menu-bar layout preferences and applies without another fetch.
 If the selected window is missing or has unknown usage, the display falls back to Auto and resumes the selected

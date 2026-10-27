@@ -4,7 +4,7 @@
 
 ### Fixed
 
-- Plugins: refresh the selected menu-bar percentage when its usage changes while the automatic window stays unchanged (#4787).
+- Plugins: refresh the selected menu-bar percentage when its usage changes while the automatic window stays unchanged (#4787). Thanks @vincent-peng!
 
 ## 0.82.0 — 2026-10-26
 
