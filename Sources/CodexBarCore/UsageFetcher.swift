@@ -177,6 +177,8 @@ public struct UsageSnapshot: Codable, Sendable {
     /// Live provider-reported cost history supplied through the generic plugin contract.
     public let costUsage: CostUsageTokenSnapshot?
     public let details: [ProviderDetailSection]
+    /// Built-in branding requested by a plugin; does not change its identity or quota source.
+    public let iconProvider: UsageProvider?
     public let deepseekDetailedUsageState: DeepSeekDetailedUsageState
     public let deepseekPlatformProfiles: [DeepSeekPlatformProfile]
     /// Live-only ownership proof; decoded usage cannot authorize browser balance retention.
@@ -215,6 +217,7 @@ public struct UsageSnapshot: Codable, Sendable {
         case extraRateWindows
         case providerCost
         case details
+        case iconProvider
         case throughput
         case openAIAPIUsage
         case codexResetCredits
@@ -240,6 +243,7 @@ public struct UsageSnapshot: Codable, Sendable {
         providerCost: ProviderCostSnapshot? = nil,
         costUsage: CostUsageTokenSnapshot? = nil,
         details: [ProviderDetailSection] = [],
+        iconProvider: UsageProvider? = nil,
         deepseekDetailedUsageState: DeepSeekDetailedUsageState = .notRequested,
         deepseekPlatformProfiles: [DeepSeekPlatformProfile] = [],
         deepseekPlatformBalanceOwner: DeepSeekPlatformBalanceOwner? = nil,
@@ -273,6 +277,7 @@ public struct UsageSnapshot: Codable, Sendable {
         self.providerCost = providerCost
         self.costUsage = costUsage
         self.details = details
+        self.iconProvider = iconProvider
         self.deepseekDetailedUsageState = deepseekDetailedUsageState
         self.deepseekPlatformProfiles = deepseekPlatformProfiles
         self.deepseekPlatformBalanceOwner = deepseekPlatformBalanceOwner
@@ -377,6 +382,7 @@ public struct UsageSnapshot: Codable, Sendable {
         self.extraRateWindows = try container.decodeIfPresent([NamedRateWindow].self, forKey: .extraRateWindows)
         self.providerCost = try container.decodeIfPresent(ProviderCostSnapshot.self, forKey: .providerCost)
         self.costUsage = nil // Live-only provider history; refresh from the authoritative source.
+        self.iconProvider = try container.decodeIfPresent(UsageProvider.self, forKey: .iconProvider)
         let details = try container.decodeIfPresent([ProviderDetailSection].self, forKey: .details) ?? []
         try ProviderDetailSection.validateSections(details)
         // Provider-specific by design: native Grok and Claude reset-credit rows are live-only inventory.
@@ -426,6 +432,7 @@ public struct UsageSnapshot: Codable, Sendable {
         try container.encode(self.tertiary, forKey: .tertiary)
         try container.encodeIfPresent(self.extraRateWindows, forKey: .extraRateWindows)
         try container.encodeIfPresent(self.providerCost, forKey: .providerCost)
+        try container.encodeIfPresent(self.iconProvider, forKey: .iconProvider)
         if !self.details.isEmpty {
             try container.encode(self.details, forKey: .details)
         }
@@ -628,6 +635,7 @@ public struct UsageSnapshot: Codable, Sendable {
             providerCost: providerCost.resolving(self.providerCost),
             costUsage: costUsage.resolving(self.costUsage),
             details: details.resolving(self.details),
+            iconProvider: self.iconProvider,
             deepseekDetailedUsageState: deepseekDetailedUsageState.resolving(self.deepseekDetailedUsageState),
             deepseekPlatformProfiles: deepseekPlatformProfiles.resolving(self.deepseekPlatformProfiles),
             deepseekPlatformBalanceOwner: self.deepseekPlatformBalanceOwner,

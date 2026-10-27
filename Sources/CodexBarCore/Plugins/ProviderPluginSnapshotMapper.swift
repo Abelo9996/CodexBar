@@ -48,7 +48,7 @@ enum ProviderPluginSnapshotMapper {
             value,
             allowed: [
                 "primary", "secondary", "tertiary", "extraWindows", "cost", "costUsage", "details",
-                "identity",
+                "identity", "iconProvider",
                 "subscriptionRenewsAt", "subscriptionExpiresAt", "dataConfidence", "empty",
             ],
             path: "usage")
@@ -61,6 +61,7 @@ enum ProviderPluginSnapshotMapper {
         let costUsage = try self.costUsage(value)
         let details = try self.details(value)
         let identity = try self.identity(value, provider: provider)
+        let iconProvider = try self.iconProvider(value)
         let subscriptionRenewsAt = try self.optionalDate(value, property: "subscriptionRenewsAt")
         let subscriptionExpiresAt = try self.optionalDate(value, property: "subscriptionExpiresAt")
         let dataConfidence = try self.dataConfidence(value)
@@ -88,11 +89,20 @@ enum ProviderPluginSnapshotMapper {
             providerCost: providerCost,
             costUsage: costUsage,
             details: details,
+            iconProvider: iconProvider,
             subscriptionExpiresAt: subscriptionExpiresAt,
             subscriptionRenewsAt: subscriptionRenewsAt,
             updatedAt: now,
             identity: identity,
             dataConfidence: dataConfidence)
+    }
+
+    private static func iconProvider(_ root: any ProviderPluginValue) throws -> UsageProvider? {
+        guard let value = root.property("iconProvider"), !value.isUndefined, !value.isNull else { return nil }
+        guard value.isString, let provider = UsageProvider(rawValue: value.stringValue()) else {
+            throw ProviderPluginError.invalidSnapshot("iconProvider must be a built-in provider ID")
+        }
+        return provider
     }
 
     private static func hasMeaningfulIdentity(_ identity: ProviderIdentitySnapshot?) -> Bool {

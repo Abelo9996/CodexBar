@@ -318,6 +318,8 @@ so portable third-party plugins must use the host helpers below instead of ECMA-
   February 28, or February 29 in a leap year). Offsets are limited to ±120,000 months, and invalid dates, time zones,
   fractional offsets, or results outside JavaScript's Date range throw.
 - `ctx.env.timeZone` is the host's current IANA time-zone identifier; zero-offset GMT aliases are normalized to `UTC`.
+- `ctx.env.supportsIconProvider === true` means snapshots may request built-in provider branding with `iconProvider`.
+  Older hosts omit this flag; omit the snapshot field on those hosts to retain the manifest icon without a fetch error.
 - `ctx.format.number(value, options?)`, `usd(value)`, and `monthDay(date)` provide deterministic formatting on both
   engines. Number options support `minimumFractionDigits` and `maximumFractionDigits`.
 - `ctx.format.currency(value, currencyCode)` uses the same native `UsageFormatter` as the app, with `en_US` currency
@@ -404,6 +406,24 @@ and 120 characters per detail string. Wrong types and limit violations fail the 
 Standard windows (`primary`, `secondary`, and `tertiary`) may include an optional `title`. Generic menu cards and
 `plugins fetch` text output use it instead of Primary, Secondary, or Tertiary. Titles are trimmed, limited to 256 UTF-8
 bytes, and must be strings; omitted, null, or blank titles use the default label. JSON snapshots retain the title.
+
+Snapshots may set `iconProvider` to a built-in provider ID (for example `claude`, `codex`, `antigravity`, or `zai`)
+to use that provider's cached logo for the menu-bar brand icon and provider switcher. This is presentation metadata:
+it does not change the plugin's name, identity, credentials, quotas, permissions, or menu-card heading. It loads no
+external images. Missing/null values, or an unavailable bundled image, use the existing manifest SVG/monogram.
+Unknown IDs and non-string values fail validation. An icon alone does not count as measured usage or identity.
+Send the field only when the host advertises support:
+
+```js
+if (ctx.env.supportsIconProvider === true && selectedProvider !== "auto") {
+  snapshot.iconProvider = selectedProvider;
+}
+return snapshot;
+```
+
+Returning to `auto` means omitting the field in the next snapshot, which restores the manifest icon even if the
+percentage did not change. The option applies when the menu bar is configured to show the brand icon; it does not
+replace the quota meter in meter-only mode.
 
 Plugin cards show `resetsAt` using the app's countdown or absolute-time preference. When no usable timestamp is
 available, `resetDescription` supplies the reset text through the same formatter as built-in providers. A refresh

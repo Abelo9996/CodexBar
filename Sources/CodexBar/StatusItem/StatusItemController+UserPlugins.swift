@@ -167,6 +167,20 @@ extension StatusItemController {
     }
 
     func userPluginSwitcherIcon(for plugin: UserProviderPlugin) -> NSImage {
+        Self.userPluginSwitcherIcon(
+            for: plugin,
+            snapshot: self.store.menuBarSnapshot(for: plugin.manifest.id),
+            brandIcon: self.brandIcon)
+    }
+
+    static func userPluginSwitcherIcon(
+        for plugin: UserProviderPlugin,
+        snapshot: UsageSnapshot?,
+        brandIcon: (UsageProvider) -> NSImage?) -> NSImage
+    {
+        if let provider = snapshot?.iconProvider, let image = brandIcon(provider) {
+            return image
+        }
         if let image = Self.userPluginSVGImage(plugin) {
             return image
         }

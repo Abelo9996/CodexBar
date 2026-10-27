@@ -128,6 +128,8 @@ interface CodexBarUsageSnapshot {
   /** Exact provider-reported daily spend. The host validates and sums every numeric row. */
   costUsage?: CodexBarCostUsageSnapshot | null;
   identity?: CodexBarIdentitySnapshot | null;
+  /** Built-in provider ID for the menu-bar/switcher logo only. Send only when ctx.env.supportsIconProvider === true. */
+  iconProvider?: string | null;
   subscriptionRenewsAt?: Date | string | null;
   subscriptionExpiresAt?: Date | string | null;
   dataConfidence?: "exact" | "estimated" | "percentOnly" | "unknown";
@@ -288,6 +290,8 @@ interface CodexBarPluginContext {
   readonly fail: Readonly<CodexBarFailures>;
   readonly env: {
     readonly timeZone: string;
+    /** Older hosts omit this flag and reject the iconProvider snapshot field. */
+    readonly supportsIconProvider?: boolean;
   };
   readonly cache: {
     get<T = unknown>(key: string): T | undefined;

@@ -1003,6 +1003,45 @@ extension UserProviderPluginTests {
     }
 
     @MainActor
+    @Test(arguments: [UsageProvider.claude, .codex, .antigravity, .zai])
+    func `plugin icon provider selects cached branding and restores the manifest fallback`(
+        provider: UsageProvider) throws
+    {
+        let fixture = try Fixture()
+        defer { fixture.remove() }
+        let svg = #"<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M2 2h12v12H2z"/></svg>"#
+        _ = try fixture.write(name: "icon.js", source: Self.iconPlugin(id: "icon-meter", svg: svg))
+        let plugin = try #require(UserProviderPluginRegistry.refresh(
+            loader: fixture.loader(transport: RecordingTransport(responseJSON: "{}"))).first?.plugin)
+        let snapshot = UsageSnapshot(
+            primary: RateWindow(usedPercent: 25, windowMinutes: 10080, resetsAt: nil, resetDescription: nil),
+            secondary: nil,
+            iconProvider: provider,
+            updatedAt: Date(timeIntervalSince1970: 0))
+        let brand = try #require(ProviderBrandIcon.image(for: provider))
+        let image = StatusItemController.userPluginSwitcherIcon(for: plugin, snapshot: snapshot) { selected in
+            #expect(selected == provider)
+            return ProviderBrandIcon.image(for: selected)
+        }
+        #expect(image === brand)
+        #expect(StatusItemController.userPluginSwitcherIcon(
+            for: plugin, snapshot: snapshot, brandIcon: { ProviderBrandIcon.image(for: $0) }) === image)
+        for source in [snapshot, nil] {
+            let fallback = StatusItemController.userPluginSwitcherIcon(for: plugin, snapshot: source) { _ in nil }
+            #expect(fallback.isTemplate)
+            #expect(fallback.size == NSSize(width: 16, height: 16))
+        }
+        let next = UsageSnapshot(
+            primary: snapshot.primary,
+            secondary: nil,
+            iconProvider: provider == .claude ? .codex : .claude,
+            updatedAt: snapshot.updatedAt)
+        let nextImage = StatusItemController.userPluginSwitcherIcon(
+            for: plugin, snapshot: next, brandIcon: { ProviderBrandIcon.image(for: $0) })
+        #expect(nextImage !== image)
+    }
+
+    @MainActor
     @Test
     func `plugin svg icon is kept and rendered as a template image`() throws {
         let fixture = try Fixture()
