@@ -3,6 +3,33 @@ import Testing
 @testable import CodexBarCore
 
 struct ProviderPluginIconProviderTests {
+    @Test
+    func `pre-icon snapshots and version one plugin settings retain their data`() throws {
+        let legacy = Data(#"""
+        {"primary":{"usedPercent":25,"windowMinutes":10080},"secondary":null,"tertiary":null,
+         "updatedAt":0,"identity":{"providerID":"proxy-meter","accountEmail":"fixture@example.test"},
+         "dataConfidence":"percentOnly"}
+        """#.utf8)
+        let snapshot = try JSONDecoder().decode(UsageSnapshot.self, from: legacy)
+        #expect(snapshot.iconProvider == nil)
+        #expect(snapshot.primary?.usedPercent == 25)
+        #expect(snapshot.primary?.windowMinutes == 10080)
+        #expect(snapshot.identity?.providerID?.rawValue == "proxy-meter")
+        #expect(snapshot.identity?.accountEmail == "fixture@example.test")
+        #expect(snapshot.dataConfidence == .percentOnly)
+        let encoded = try JSONEncoder().encode(snapshot)
+        let json = try #require(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+        #expect(json["iconProvider"] == nil)
+        let config = Data(#"""
+        {"version":1,"providers":[{"id":"proxy-meter","enabled":true,
+         "pluginSettings":{"MENUBAR_PROVIDER":"claude"},"pluginSecrets":{"TOKEN":"fixture-secret"}}]}
+        """#.utf8)
+        let decoded = try CodexBarConfig.decode(from: config)
+        let original = try #require(JSONSerialization.jsonObject(with: config) as? NSDictionary)
+        let roundTrip = try #require(JSONSerialization.jsonObject(with: JSONEncoder().encode(decoded)) as? NSDictionary)
+        #expect(original == roundTrip)
+    }
+
     @Test(arguments: ProviderPluginTransportTests.engines)
     func `host advertises built-in icon support without changing plugin identity`(
         engine: ProviderPluginEngineKind) async throws

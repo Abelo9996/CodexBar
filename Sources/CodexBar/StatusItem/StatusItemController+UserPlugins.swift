@@ -279,7 +279,8 @@ extension ProviderSwitcherView {
         _ plugin: UserProviderPlugin,
         iconProvider: (UserProviderPlugin) -> NSImage) -> NSImage
     {
-        let image = iconProvider(plugin)
+        let source = iconProvider(plugin)
+        guard let image = source.copy() as? NSImage else { return source }
         image.size = NSSize(width: 16, height: 16)
         return image
     }

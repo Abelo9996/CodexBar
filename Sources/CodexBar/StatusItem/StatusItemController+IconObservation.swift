@@ -49,11 +49,13 @@ extension StatusItemController {
         for instanceID: ProviderInstanceID, showBrandPercent: Bool) -> String
     {
         guard let provider = instanceID.firstPartyProvider else {
+            let snapshot = self.store.menuBarSnapshot(for: instanceID)
             let percent = Self.pluginSwitcherMetricPercent(
-                snapshot: self.store.menuBarSnapshot(for: instanceID), showUsed: self.settings.usageBarsShowUsed)
+                snapshot: snapshot, showUsed: self.settings.usageBarsShowUsed)
             let source = UserProviderPluginRegistry.plugin(for: instanceID)?.sourceHash ?? ""
+            let icon = showBrandPercent ? snapshot?.iconProvider?.rawValue ?? "" : ""
             return "\(instanceID.rawValue)|percent=\(Self.iconSignatureValue(percent))" +
-                "|error=\(self.store.errors[instanceID] != nil)|source=\(source)"
+                "|error=\(self.store.errors[instanceID] != nil)|source=\(source)|icon=\(icon)"
         }
         let snapshot = self.menuBarUsageSource(for: provider).snapshot
         let style = self.store.style(for: provider)
