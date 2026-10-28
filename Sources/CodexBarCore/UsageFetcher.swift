@@ -564,7 +564,9 @@ public struct UsageSnapshot: Codable, Sendable {
     }
 
     private func orderedPerplexityFallbackWindows() -> [RateWindow] {
-        let fallbackWindows = [self.tertiary, self.secondary].compactMap(\.self)
+        // Organization pool credits are drawn after the member's own credits.
+        let orgWindows = (self.extraRateWindows ?? []).filter(\.usageKnown).map(\.window)
+        let fallbackWindows = [self.tertiary, self.secondary].compactMap(\.self) + orgWindows
         let usableFallback = fallbackWindows.filter { $0.remainingPercent > 0 }
         let exhaustedFallback = fallbackWindows.filter { $0.remainingPercent <= 0 }
         return usableFallback + exhaustedFallback
