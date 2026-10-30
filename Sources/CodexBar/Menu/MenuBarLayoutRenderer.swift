@@ -103,7 +103,7 @@ struct MenuBarLayoutRenderData: Hashable {
 
     func extraTitle(_ id: String) -> String? {
         ProviderDescriptorRegistry.descriptor(for: self.provider).menuBarMetrics.namedExtras[id].map { title in
-            self.extraRateWindows.first { $0.id == id }?.title ?? L(title)
+            L(self.extraRateWindows.first { $0.id == id }?.title ?? title)
         }
     }
 

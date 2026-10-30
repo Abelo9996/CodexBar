@@ -4,6 +4,7 @@
 
 ### Fixed
 
+- Perplexity: show organization pool credits separately and use them for automatic usage after personal credits run out (#4826, #4828). Thanks @Abelo9996!
 - OpenCodex: reduce temporary memory use when importing large usage logs (#4803).
 - Cursor: explain when the Cursor app session has expired and no browser session works, with steps to sign in again (#4804). Thanks @julianpinedayyz!
 ### Changed

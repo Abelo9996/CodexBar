@@ -455,7 +455,7 @@ struct PerplexityUsageFetcherTests {
         let org = try #require(usage.extraRateWindows?.first)
         #expect(usage.extraRateWindows?.count == 1)
         #expect(org.id == "org-credits")
-        #expect(org.title == "Org credits")
+        #expect(org.title == "Organization")
         #expect(abs(org.window.usedPercent - 24371 / (24371 + 3342.28) * 100) < 0.0001)
         #expect(org.window.resetDescription == "24371/27713 credits")
         #expect(usage.automaticPerplexityWindow() == org.window)

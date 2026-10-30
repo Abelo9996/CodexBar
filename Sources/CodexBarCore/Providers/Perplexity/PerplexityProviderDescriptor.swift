@@ -17,7 +17,8 @@ public enum PerplexityProviderDescriptor {
         confetti: [0x016A71, 0x313131, 0xFDFBFA],
         noDataMessage: "Perplexity cost tracking is not supported.",
         menuBarMetrics: ProviderMenuBarMetricCapabilities(
-            supported: [.automatic, .primary, .secondary, .tertiary]),
+            supported: [.automatic, .primary, .secondary, .tertiary],
+            namedExtras: ["org-credits": "Organization"]),
         presentation: ProviderUsagePresentation(
             extraRateWindowSelector: { snapshot in
                 (snapshot.extraRateWindows ?? []).filter { $0.id == "org-credits" }

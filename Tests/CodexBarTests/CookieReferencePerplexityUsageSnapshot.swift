@@ -146,7 +146,7 @@ extension PerplexityUsageSnapshot {
             let orgTotal = orgUsed + orgAvailable
             return [NamedRateWindow(
                 id: "org-credits",
-                title: "Org credits",
+                title: "Organization",
                 window: RateWindow(
                     usedPercent: orgTotal > 0 ? min(100, max(0, orgUsed / orgTotal * 100)) : 100,
                     windowMinutes: nil,

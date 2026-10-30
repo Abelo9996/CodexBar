@@ -152,7 +152,7 @@ defineProvider({
       extraWindows = [
         {
           id: "org-credits",
-          title: "Org credits",
+          title: "Organization",
           window: {
             usedPercent: percent(orgUsed, orgUsed + orgAvailable),
             resetDescription: description(orgUsed, orgUsed + orgAvailable, "credits"),

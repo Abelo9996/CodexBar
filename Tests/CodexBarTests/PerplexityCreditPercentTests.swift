@@ -158,7 +158,7 @@ struct PerplexityCreditPercentTests {
             hidePersonalInfo: false,
             now: now))
         let org = try #require(model.metrics.first { $0.id == "org-credits" })
-        #expect(org.title == "Org credits")
+        #expect(org.title == "Organization")
         #expect(org.resetText == nil)
         #expect(org.detailText == detail)
 
@@ -168,7 +168,7 @@ struct PerplexityCreditPercentTests {
             credits: nil,
             context: RenderContext(header: "Perplexity", status: nil, useColor: false, resetStyle: .countdown),
             now: now)
-        #expect(text.contains("Org credits: "))
+        #expect(text.contains("Organization: "))
         #expect(text.contains(detail))
         #expect(!text.contains("Resets \(detail)"))
 
@@ -183,9 +183,27 @@ struct PerplexityCreditPercentTests {
             resetStyle: .countdown,
             weeklyWorkDays: nil,
             now: now))
-        let cardOrg = try #require(card.metrics.first { $0.label == "Org credits" })
+        let cardOrg = try #require(card.metrics.first { $0.label == "Organization" })
         #expect(cardOrg.detailText == detail)
         #expect(cardOrg.resetText == nil)
+
+        let data = self.renderData(provider: .perplexity, snapshot: snapshot)
+        let automatic = MenuBarLayoutRenderer().render(
+            layout: MenuBarLayout(lines: [[.percent(window: .automatic)]]),
+            data: data,
+            icon: nil,
+            options: MenuBarLayoutRenderOptions(
+                size: .regular,
+                highContrast: false,
+                showUsed: false,
+                conditionals: [],
+                appearanceName: NSAppearance.Name.aqua.rawValue,
+                isDebugApp: false,
+                now: now))
+        #expect(automatic.attributedTitle.string == "Organization 12%")
+        CodexBarLocalizationOverride.$appLanguage.withValue("it") {
+            #expect(data.extraTitle("org-credits") == "Organizzazione")
+        }
     }
 
     private func renderData(provider: UsageProvider, snapshot: UsageSnapshot) -> MenuBarLayoutRenderData {
@@ -201,6 +219,8 @@ struct PerplexityCreditPercentTests {
             primary: MenuBarLayoutRenderWindow(snapshot.primary),
             secondary: MenuBarLayoutRenderWindow(snapshot.secondary),
             tertiary: MenuBarLayoutRenderWindow(snapshot.tertiary),
+            extraRateWindows: MenuBarLayoutNamedExtra.windows(provider: provider, snapshot: snapshot)
+                .map(MenuBarLayoutRenderExtra.init),
             session: MenuBarLayoutRenderWindow(semantic.session),
             weekly: MenuBarLayoutRenderWindow(semantic.weekly),
             scopedWeekly: nil,
