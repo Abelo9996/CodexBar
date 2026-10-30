@@ -30,7 +30,7 @@ struct PluginMenuBarSummaryTests {
     func `summary keeps item ownership order zero and unavailable values`() throws {
         let snapshot = try pluginSummarySnapshot()
         let remaining = PluginMenuBarSummaryRenderer.elements(snapshot: snapshot, showUsed: false)
-        #expect(remaining.map(\.title) == ["Claude", "Codex", "z.ai"])
+        #expect(remaining.map(\.iconProvider) == [.claude, .codex, .zai])
         #expect(remaining.map(\.value) == [UsageFormatter.percentString(75), UsageFormatter.percentString(0), "—"])
         let used = PluginMenuBarSummaryRenderer.elements(snapshot: snapshot, showUsed: true)
         #expect(used.map(\.value) == [UsageFormatter.percentString(25), UsageFormatter.percentString(100), "—"])

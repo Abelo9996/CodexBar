@@ -32,7 +32,8 @@ the most-used reported seven-day window, otherwise the first available primary, 
 Choose **Primary**, **Secondary**, **Tertiary**, or a named extra window to use that quota for both the Icon & percent
 number and the provider-switcher gauge. Reported window titles replace the generic labels; named extras appear after
 the plugin reports them. For example, choosing a monthly window at 76.9% used displays **77%** even just after a weekly
-reset. Both surfaces honor the existing used/remaining display preference.
+reset. Both surfaces honor the existing used/remaining display preference. The menu-bar percentage refreshes when
+its selected window changes, even while Auto stays unchanged.
 
 The choice is saved per plugin using the existing menu-bar layout preferences and applies without another fetch.
 If the selected window is missing or has unknown usage, the display falls back to Auto and resumes the selected
@@ -442,9 +443,10 @@ Missing, unmeasured or unknown references show unavailable, never another quota.
 Titles and references are limited to 120 characters. The summary is presentation metadata, not another usage source.
 It appears in merged **Icon & percent** mode with this plugin selected; clicking the group opens the same plugin menu.
 The app preserves the configured order, used/remaining preference, accessibility labels, template tinting and existing
-status-item placement. Meter-only mode keeps its existing rendering. Empty/omitted items restore the normal single
-indicator. Scripts must omit the entire field on older hosts. Summary rendering caches unchanged frames and uses only
-bundled provider images (or manifest fallback), without new timers, status items or network requests.
+status-item placement. Meter-only mode keeps its existing rendering. A nonempty summary takes precedence over the
+saved **Menu bar metric** selection. Empty/omitted items restore the normal single indicator using that saved selection.
+Scripts must omit the entire field on older hosts. Summary rendering caches unchanged frames and uses only bundled
+provider images (or manifest fallback), without new timers, status items or network requests.
 
 Plugin cards show `resetsAt` using the app's countdown or absolute-time preference. When no usable timestamp is
 available, `resetDescription` supplies the reset text through the same formatter as built-in providers. A refresh

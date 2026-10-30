@@ -4,7 +4,6 @@ import CodexBarCore
 @MainActor
 final class PluginMenuBarSummaryRenderer {
     struct Element: Hashable {
-        let title: String
         let iconProvider: UsageProvider?
         let value: String
         let accessibility: String
@@ -35,7 +34,6 @@ final class PluginMenuBarSummaryRenderer {
             let value = used.map { UsageFormatter.percentString(showUsed ? $0 : 100 - $0) } ?? "—"
             let usage = used.map { UsageFormatter.usageLine(remaining: 100 - $0, used: $0, showUsed: showUsed) } ?? "—"
             return Element(
-                title: item.title,
                 iconProvider: item.iconProvider,
                 value: value,
                 accessibility: "\(item.title): \(usage)")
