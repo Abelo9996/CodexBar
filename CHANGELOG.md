@@ -2,6 +2,14 @@
 
 ## 0.82.1 — Unreleased
 
+### Added
+
+- Plugins: let each snapshot choose a built-in provider logo for its menu bar and switcher, independently of plugin identity and quota ownership (#4801). Thanks @KLIEBHAN!
+
+### Fixed
+
+- Plugins: refresh the selected menu-bar percentage when its usage changes while the automatic window stays unchanged (#4787). Thanks @vincent-peng!
+
 ## 0.82.0 — 2026-10-26
 
 ### Highlights

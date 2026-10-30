@@ -6,30 +6,22 @@ extension StatusItemController {
         let showBrandPercent = self.settings.menuBarShowsBrandIconWithPercent
         let mergeIcons = self.shouldMergeIcons
         let visibleProviders = self.store.enabledProvidersForDisplay().map(\.rawValue).sorted().joined(separator: ",")
-        let providerSignatures: String
         let primaryProvider: ProviderInstanceID?
+        let providers: [ProviderInstanceID]
         if let stackedProviders = self.stackedMergeIconProvidersIfActive() {
             primaryProvider = stackedProviders.top.instanceID
-            providerSignatures = [stackedProviders.top, stackedProviders.bottom]
-                .map {
-                    self.providerStoreIconObservationSignature(for: $0.instanceID, showBrandPercent: showBrandPercent)
-                }
-                .joined(separator: "||")
+            providers = [stackedProviders.top.instanceID, stackedProviders.bottom.instanceID]
         } else if mergeIcons {
             let primary = self.primaryProviderForUnifiedIcon()
             primaryProvider = primary
-            providerSignatures = self.providerStoreIconObservationSignature(
-                for: primary,
-                showBrandPercent: showBrandPercent)
+            providers = [primary]
         } else {
             primaryProvider = nil
-            providerSignatures = UsageProvider.allCases
-                .filter { self.isVisible($0) }
-                .map {
-                    self.providerStoreIconObservationSignature(for: $0.instanceID, showBrandPercent: showBrandPercent)
-                }
-                .joined(separator: "||")
+            providers = UsageProvider.allCases.filter { self.isVisible($0) }.map(\.instanceID)
         }
+        let providerSignatures = providers.map {
+            self.providerStoreIconObservationSignature(for: $0, showBrandPercent: showBrandPercent)
+        }.joined(separator: "||")
         return [
             "merge=\(mergeIcons ? "1" : "0")",
             "visible=\(visibleProviders)",
@@ -49,13 +41,12 @@ extension StatusItemController {
         for instanceID: ProviderInstanceID, showBrandPercent: Bool) -> String
     {
         guard let provider = instanceID.firstPartyProvider else {
-            let snapshot = self.store.menuBarSnapshot(for: instanceID)
-            let percent = Self.pluginSwitcherMetricPercent(
-                snapshot: snapshot, showUsed: self.settings.usageBarsShowUsed)
-            let source = UserProviderPluginRegistry.plugin(for: instanceID)?.sourceHash ?? ""
-            let icon = showBrandPercent ? snapshot?.iconProvider?.rawValue ?? "" : ""
-            return "\(instanceID.rawValue)|percent=\(Self.iconSignatureValue(percent))" +
-                "|error=\(self.store.errors[instanceID] != nil)|source=\(source)|icon=\(icon)"
+            return Self.pluginStoreIconObservationSignature(
+                for: instanceID,
+                snapshot: self.store.menuBarSnapshot(for: instanceID),
+                settings: self.settings,
+                hasError: self.store.errors[instanceID] != nil,
+                sourceHash: UserProviderPluginRegistry.plugin(for: instanceID)?.sourceHash ?? "")
         }
         let snapshot = self.menuBarUsageSource(for: provider).snapshot
         let style = self.store.style(for: provider)
@@ -67,30 +58,24 @@ extension StatusItemController {
         let creditsRemaining = self.menuBarCreditsRemainingForIcon(provider: provider, snapshot: snapshot)
         let scopedWeekly = MenuBarLayoutSemanticWindowResolver.scopedWeeklyNamedWindow(snapshot: snapshot)
         let displayText = showBrandPercent ? self.menuBarDisplayText(for: provider, snapshot: snapshot) : nil
-        let layoutCostSignature = showBrandPercent
-            ? self.storedMenuBarLayoutCostSignature(for: provider)
-            : nil
-        let layoutAccountSignature = showBrandPercent
-            ? self.storedMenuBarLayoutAccountSignature(for: provider, snapshot: snapshot)
-            : nil
-        let layoutPaceSignature = showBrandPercent
-            ? self.storedMenuBarLayoutPaceSignature(for: provider, snapshot: snapshot)
-            : nil
-        let layoutBalanceSignature = showBrandPercent
-            ? self.storedMenuBarLayoutBalanceSignature(for: provider, snapshot: snapshot)
-            : nil
-        let layoutLaneSignature = showBrandPercent
-            ? self.storedMenuBarLayoutLaneSignature(for: provider, snapshot: snapshot)
-            : nil
-        let layoutResetSignature = showBrandPercent
-            ? self.storedMenuBarLayoutResetSignature(for: provider, snapshot: snapshot)
-            : nil
-        let layoutConditionalWindowSignature = showBrandPercent
-            ? self.storedMenuBarLayoutConditionalWindowSignature(for: provider, snapshot: snapshot)
-            : nil
-        let layoutSpendSignature = showBrandPercent
-            ? self.storedMenuBarLayoutSpendSignature(for: provider, snapshot: snapshot)
-            : nil
+        let layoutSignature: String
+        if showBrandPercent {
+            let fields = [
+                ("layoutCost", self.storedMenuBarLayoutCostSignature(for: provider)),
+                ("layoutAccount", self.storedMenuBarLayoutAccountSignature(for: provider, snapshot: snapshot)),
+                ("layoutPace", self.storedMenuBarLayoutPaceSignature(for: provider, snapshot: snapshot)),
+                ("layoutBalance", self.storedMenuBarLayoutBalanceSignature(for: provider, snapshot: snapshot)),
+                ("layoutLanes", self.storedMenuBarLayoutLaneSignature(for: provider, snapshot: snapshot)),
+                ("layoutResets", self.storedMenuBarLayoutResetSignature(for: provider, snapshot: snapshot)),
+                (
+                    "layoutCondWindows",
+                    self.storedMenuBarLayoutConditionalWindowSignature(for: provider, snapshot: snapshot)),
+                ("layoutSpend", self.storedMenuBarLayoutSpendSignature(for: provider, snapshot: snapshot)),
+            ]
+            layoutSignature = fields.map { "\($0.0)=\($0.1 ?? "nil")" }.joined(separator: "|")
+        } else {
+            layoutSignature = ""
+        }
 
         return [
             provider.rawValue,
@@ -106,15 +91,25 @@ extension StatusItemController {
             "refreshing=\(self.isRefreshingLocalMenuBarUsage(provider) ? "1" : "0")",
             "text=\(displayText ?? "nil")",
             "estimated=\(snapshot?.dataConfidence == .estimated)",
-            "layoutCost=\(layoutCostSignature ?? "nil")",
-            "layoutAccount=\(layoutAccountSignature ?? "nil")",
-            "layoutPace=\(layoutPaceSignature ?? "nil")",
-            "layoutBalance=\(layoutBalanceSignature ?? "nil")",
-            "layoutLanes=\(layoutLaneSignature ?? "nil")",
-            "layoutResets=\(layoutResetSignature ?? "nil")",
-            "layoutCondWindows=\(layoutConditionalWindowSignature ?? "nil")",
-            "layoutSpend=\(layoutSpendSignature ?? "nil")",
+            layoutSignature,
         ].joined(separator: "|")
+    }
+
+    static func pluginStoreIconObservationSignature(
+        for instanceID: ProviderInstanceID,
+        snapshot: UsageSnapshot?,
+        settings: SettingsStore,
+        hasError: Bool,
+        sourceHash: String) -> String
+    {
+        let preference = settings.menuBarShowsBrandIconWithPercent
+            ? MenuBarPercentWindowPreference.current(in: settings.menuBarLayout(forPlugin: instanceID)) ?? .automatic
+            : .automatic
+        let percent = Self.pluginSwitcherMetricPercent(
+            snapshot: snapshot, showUsed: settings.usageBarsShowUsed, preference: preference)
+        let icon = settings.menuBarShowsBrandIconWithPercent ? snapshot?.iconProvider?.rawValue ?? "" : ""
+        return "\(instanceID.rawValue)|percent=\(Self.iconSignatureValue(percent))" +
+            "|error=\(hasError)|source=\(sourceHash)|icon=\(icon)"
     }
 
     private func storedMenuBarLayoutResetSignature(for provider: UsageProvider, snapshot: UsageSnapshot?) -> String? {
