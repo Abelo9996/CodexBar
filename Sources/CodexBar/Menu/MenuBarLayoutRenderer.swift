@@ -501,11 +501,13 @@ final class MenuBarLayoutRenderer {
             attributes[.baselineOffset] = Self.stackedBaselineOffset + 2 + CGFloat(options.verticalAdjustment)
         }
 
+        let automaticLabel = Self.automaticWindowLabel(data: data)
         for (lineIndex, renderedLine) in renderedLines.enumerated() {
             if lineIndex > 0 {
                 result.append(NSAttributedString(string: "\n", attributes: attributes))
             }
             var accessibilityParts: [String] = []
+            var lineWindowLabel: String?
             for (tokenIndex, token) in renderedLine.enumerated() {
                 // The leading icon is surfaced as `button.image` so AppKit applies the system's
                 // active/inactive display tinting; it is not repeated inside the attributed title,
@@ -528,8 +530,25 @@ final class MenuBarLayoutRenderer {
                         attributes: attributes),
                     options: options,
                     providerTintColor: providerTintColor)
-                renderedItem = Self.labelAutomaticItem(
-                    renderedItem, token: token, data: data, options: options, attributes: attributes)
+                switch token {
+                case .percent(window: .automatic), .pace(window: .automatic), .resetCountdown, .resetAbsolute,
+                     .windowResetCountdown(window: .automatic), .windowResetAbsolute(window: .automatic):
+                    if let label = automaticLabel {
+                        renderedItem.value = Self.prefixedValue(
+                            options.showWindowLabels && label.short != lineWindowLabel ? label.short : "",
+                            value: renderedItem.value,
+                            attributes: attributes)
+                        // VoiceOver names every window, even when the visible prefix is shared.
+                        renderedItem.accessibilityText = renderedItem.accessibilityText
+                            .map { L("%@: %@", label.full, $0) }
+                        lineWindowLabel = label.short
+                    }
+                case .space, .separatorDot: break
+                default:
+                    lineWindowLabel = renderedItem.value.length > 0
+                        ? renderedItem.value
+                        .attribute(Self.windowPrefixKey, at: 0, effectiveRange: nil) as? String : nil
+                }
                 result.append(renderedItem.value)
                 if let accessibilityText = renderedItem.accessibilityText {
                     accessibilityParts.append(accessibilityText)
@@ -686,28 +705,6 @@ final class MenuBarLayoutRenderer {
         }
     }
 
-    private static func labelAutomaticItem(
-        _ rendered: (value: NSAttributedString, accessibilityText: String?),
-        token: MenuBarLayoutToken,
-        data: MenuBarLayoutRenderData,
-        options: MenuBarLayoutRenderOptions,
-        attributes: [NSAttributedString.Key: Any])
-        -> (value: NSAttributedString, accessibilityText: String?)
-    {
-        switch token {
-        case .percent(window: .automatic), .pace(window: .automatic), .resetCountdown, .resetAbsolute,
-             .windowResetCountdown(window: .automatic), .windowResetAbsolute(window: .automatic): break
-        default: return rendered
-        }
-        guard let label = self.automaticWindowLabel(data: data) else { return rendered }
-        return (
-            self.prefixedValue(
-                options.showWindowLabels ? label.short : "",
-                value: rendered.value,
-                attributes: attributes),
-            rendered.accessibilityText.map { L("%@: %@", label.full, $0) })
-    }
-
     private static func automaticWindowLabel(data: MenuBarLayoutRenderData) -> (short: String, full: String)? {
         guard let automatic = data.automatic, data.automaticText == nil else { return nil }
         let semantic: [PercentWindow] = [.session, .weekly, .scopedWeekly]
@@ -730,8 +727,8 @@ final class MenuBarLayoutRenderer {
             let title = data.laneLabels.label(for: lane)
             return (self.laneShortLabel(lane, data: data) ?? String(title.prefix(1)).uppercased(), title)
         }
-        guard laneMatches.isEmpty else { return nil }
-        guard extraMatches.count == 1, let extra = extraMatches.first, let title = data.extraTitle(extra.id)
+        guard laneMatches.isEmpty, extraMatches.count == 1, let extra = extraMatches.first,
+              let title = data.extraTitle(extra.id)
         else { return nil }
         let short = ProviderDescriptorRegistry.descriptor(for: data.provider).menuBarMetrics
             .namedExtraShortLabels[extra.id] ?? title
@@ -943,7 +940,7 @@ final class MenuBarLayoutRenderer {
     {
         guard !prefix.isEmpty else { return value }
         let result = NSMutableAttributedString(string: "\(prefix) ", attributes: attributes)
-        result.addAttribute(self.windowPrefixKey, value: true, range: NSRange(location: 0, length: result.length))
+        result.addAttribute(self.windowPrefixKey, value: prefix, range: NSRange(location: 0, length: result.length))
         result.append(value)
         return result
     }
