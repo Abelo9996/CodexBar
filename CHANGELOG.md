@@ -11,6 +11,7 @@
 
 ### Fixed
 
+- CI: clean up mounted Xcode toolchains after test discovery and make optional-request ordering tests deterministic.
 - DeepSeek: import Platform sessions from supported Chromium browsers using the shared browser catalog, preserving saved Chrome profile selections (#4821). Thanks @343max!
 
 - Trae CN: align Used, Total, and Remaining credits to two decimal places when any amount is fractional (#4819). Thanks @liuyuplus!
